@@ -3,7 +3,7 @@
 
 const REQUIRED = ['name', 'age', 'position', 'experience', 'email', 'phone'];
 const DESTINATION = 'contact@hooplab-agency.com';
-const DEFAULT_FROM = 'HoopLab Agency <onboarding@resend.dev>'; // Fallback if you have not verified your domain.
+const DEFAULT_FROM = 'HoopLab Agency <onboarding@resend.dev>'; // Resend-provided sender that does not require your domain verification.
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -55,11 +55,13 @@ export default async function handler(req, res) {
 
     if (!resp.ok) {
       const err = await resp.text();
+      console.error('Resend email send failed', resp.status, err);
       return res.status(502).json({ error: 'Email send failed', details: err });
     }
 
     return res.status(200).json({ ok: true, message: 'Application received' });
   } catch (e) {
+    console.error('Resend email send failed (exception)', e);
     return res.status(502).json({ error: 'Email send failed', details: e.message });
   }
 }
