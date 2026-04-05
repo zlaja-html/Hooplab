@@ -11,11 +11,35 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
 });
 
 // Lightweight form handling placeholder
-const form = document.querySelector('.contact-form');
+const form = document.querySelector('#apply-form');
 if (form) {
+  const hint = document.getElementById('form-hint');
+
   form.addEventListener('submit', evt => {
     evt.preventDefault();
-    alert('Thanks for reaching out! We will respond within one business day.');
-    form.reset();
+    const data = new FormData(form);
+    // Honeypot basic spam guard
+    if (data.get('extra_field')) {
+      return;
+    }
+    const payload = Object.fromEntries(data.entries());
+
+    fetch('/api/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).then(res => {
+      if (res.ok) {
+        hint.textContent = 'Application received. We will review and respond after evaluation.';
+        hint.style.color = '#0b5fff';
+        form.reset();
+      } else {
+        hint.textContent = 'Could not submit right now. Please email us your details.';
+        hint.style.color = '#c00';
+      }
+    }).catch(() => {
+      hint.textContent = 'Could not submit right now. Please email us your details.';
+      hint.style.color = '#c00';
+    });
   });
 }
