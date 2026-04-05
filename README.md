@@ -18,6 +18,7 @@ This is plain HTML/CSS/JS and can be hosted on any static host (GitHub Pages, Ne
 - The Apply form posts to `/api/apply` (see `api/apply.js`).
 - `api/apply.js` is a serverless handler (Vercel/Netlify style). It validates required fields and emails submissions to `contact@hooplab-agency.com` using Resend.
 - Configure environment variable `RESEND_API_KEY` in your hosting platform (e.g., Vercel Project Settings > Environment Variables).
+- Optional: set `RESEND_FROM` to a verified sender (e.g., `HoopLab Agency <no-reply@yourdomain.com>`). Without it, the handler uses `onboarding@resend.dev` as a fallback.
 - Deploy on a host that supports serverless routes (e.g., Vercel). Static-only hosts without functions will not process the form.
 
 ## Run locally

@@ -3,13 +3,14 @@
 
 const REQUIRED = ['name', 'age', 'position', 'experience', 'video', 'email', 'phone'];
 const DESTINATION = 'contact@hooplab-agency.com';
+const DEFAULT_FROM = 'HoopLab Agency <onboarding@resend.dev>'; // Fallback if you have not verified your domain.
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const body = req.body || {};
+  const body = typeof req.body === 'string' ? safeParse(req.body) : req.body || {};
   const missing = REQUIRED.filter(key => !body[key]);
   if (missing.length) {
     return res.status(400).json({ error: `Missing fields: ${missing.join(', ')}` });
@@ -24,6 +25,8 @@ export default async function handler(req, res) {
   if (!apiKey) {
     return res.status(500).json({ error: 'Email service not configured. Set RESEND_API_KEY.' });
   }
+
+  const from = process.env.RESEND_FROM || DEFAULT_FROM;
 
   const text = [
     `New HoopLab application`,
@@ -44,7 +47,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        from: 'HoopLab Agency <no-reply@hooplab-agency.com>',
+        from,
         to: [DESTINATION],
         subject: 'New HoopLab application',
         text
@@ -59,5 +62,13 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true, message: 'Application received' });
   } catch (e) {
     return res.status(502).json({ error: 'Email send failed', details: e.message });
+  }
+}
+
+function safeParse(str) {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return {};
   }
 }

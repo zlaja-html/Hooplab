@@ -28,13 +28,14 @@ if (form) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
-    }).then(res => {
+    }).then(async res => {
+      const data = await res.json().catch(() => ({}));
       if (res.ok) {
-        hint.textContent = 'Application received. We will review and respond after evaluation.';
+        hint.textContent = data.message || 'Application received. We will review and respond after evaluation.';
         hint.style.color = '#0b5fff';
         form.reset();
       } else {
-        hint.textContent = 'Could not submit right now. Please email us your details.';
+        hint.textContent = data.error || 'Could not submit right now. Please email us your details.';
         hint.style.color = '#c00';
       }
     }).catch(() => {
