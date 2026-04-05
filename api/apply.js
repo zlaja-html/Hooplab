@@ -1,7 +1,7 @@
 // Serverless handler for Vercel/Netlify style deployments.
 // Validates input and emails applications to the HoopLab inbox via Resend.
 
-const REQUIRED = ['name', 'age', 'position', 'experience', 'video', 'email', 'phone'];
+const REQUIRED = ['name', 'age', 'position', 'experience', 'email', 'phone'];
 const DESTINATION = 'contact@hooplab-agency.com';
 const DEFAULT_FROM = 'HoopLab Agency <onboarding@resend.dev>'; // Fallback if you have not verified your domain.
 
@@ -34,7 +34,6 @@ export default async function handler(req, res) {
     `Age: ${body.age}`,
     `Position: ${body.position}`,
     `Experience: ${body.experience}`,
-    `Highlight: ${body.video}`,
     `Email: ${body.email}`,
     `Phone: ${body.phone}`
   ].join('\n');
