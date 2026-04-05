@@ -16,5 +16,10 @@ This is plain HTML/CSS/JS and can be hosted on any static host (GitHub Pages, Ne
 
 ## Form backend (Apply)
 - The Apply form posts to `/api/apply` (see `api/apply.js`).
-- `api/apply.js` is a serverless handler (Vercel/Netlify style). It validates required fields and currently returns success.
-- Plug in your destination inside `api/apply.js` (Slack/Discord webhook, Supabase/Airtable insert, or email via Resend/SendGrid) and deploy on a host that supports serverless routes (e.g., Vercel).
+- `api/apply.js` is a serverless handler (Vercel/Netlify style). It validates required fields and emails submissions to `contact@hooplab-agency.com` using Resend.
+- Configure environment variable `RESEND_API_KEY` in your hosting platform (e.g., Vercel Project Settings > Environment Variables).
+- Deploy on a host that supports serverless routes (e.g., Vercel). Static-only hosts without functions will not process the form.
+
+## Run locally
+- Open `index.html` directly in your browser, or run a static server (e.g., `npx serve .`) from the repo root.
+- The serverless route won’t run locally unless you emulate it; for local preview, form submission will hit `/api/apply` and fail unless you proxy or mock it.

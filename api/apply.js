@@ -1,7 +1,8 @@
 // Serverless handler for Vercel/Netlify style deployments.
-// Validate input and forward to your data store or notification endpoint.
+// Validates input and emails applications to the HoopLab inbox via Resend.
 
 const REQUIRED = ['name', 'age', 'position', 'experience', 'video', 'email', 'phone'];
+const DESTINATION = 'contact@hooplab-agency.com';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,12 +20,44 @@ export default async function handler(req, res) {
     return res.status(200).json({ ok: true });
   }
 
-  // TODO: Plug in your data destination. Examples:
-  // - Send to Slack/Discord webhook
-  // - Insert into Supabase/Airtable
-  // - Send email via Resend/SendGrid
-  //
-  // This placeholder just echoes success.
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return res.status(500).json({ error: 'Email service not configured. Set RESEND_API_KEY.' });
+  }
 
-  return res.status(200).json({ ok: true, message: 'Application received' });
+  const text = [
+    `New HoopLab application`,
+    `Name: ${body.name}`,
+    `Age: ${body.age}`,
+    `Position: ${body.position}`,
+    `Experience: ${body.experience}`,
+    `Highlight: ${body.video}`,
+    `Email: ${body.email}`,
+    `Phone: ${body.phone}`
+  ].join('\n');
+
+  try {
+    const resp = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'HoopLab Agency <no-reply@hooplab-agency.com>',
+        to: [DESTINATION],
+        subject: 'New HoopLab application',
+        text
+      })
+    });
+
+    if (!resp.ok) {
+      const err = await resp.text();
+      return res.status(502).json({ error: 'Email send failed', details: err });
+    }
+
+    return res.status(200).json({ ok: true, message: 'Application received' });
+  } catch (e) {
+    return res.status(502).json({ error: 'Email send failed', details: e.message });
+  }
 }
