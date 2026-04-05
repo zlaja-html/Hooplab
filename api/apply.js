@@ -26,7 +26,12 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Email service not configured. Set RESEND_API_KEY.' });
   }
 
-  const from = process.env.RESEND_FROM || DEFAULT_FROM;
+  let from = process.env.RESEND_FROM || DEFAULT_FROM;
+  // Basic validation to avoid 422 from Resend
+  if (!/^[^<]*<[^@>]+@[^>]+>$/.test(from) && !/^[^@]+@[^@]+$/.test(from)) {
+    console.warn('Invalid RESEND_FROM value, falling back to default sender');
+    from = DEFAULT_FROM;
+  }
 
   const text = [
     `New HoopLab application`,
