@@ -11,18 +11,6 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-async function urlExists(url) {
-  try {
-    let response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
-    if (response.status === 405) {
-      response = await fetch(url, { method: 'GET', cache: 'no-store' });
-    }
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
-
 function buildImageCandidates(key) {
   const clean = key.trim();
   const variants = [
@@ -32,19 +20,28 @@ function buildImageCandidates(key) {
     clean.replace(/-/g, ' '),
     clean.replace(/-/g, '')
   ];
-  const folders = ['', 'images/', 'img/', 'assets/', 'assets/images/', 'uploads/', 'public/', 'public/images/'];
-  const ext = ['', '.jpg', '.jpeg', '.png', '.webp', '.avif', '.JPG', '.JPEG', '.PNG', '.WEBP'];
+  const folders = ['', 'images/', 'img/', 'assets/', 'assets/images/', 'uploads/'];
+  const extensions = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.JPG', '.JPEG', '.PNG', '.WEBP'];
 
-  const candidates = new Set();
+  const results = new Set();
   variants.forEach(name => {
     folders.forEach(folder => {
-      ext.forEach(suffix => {
-        candidates.add(`${folder}${name}${suffix}`);
+      extensions.forEach(ext => {
+        results.add(`${folder}${name}${ext}`);
       });
     });
   });
 
-  return [...candidates];
+  return [...results];
+}
+
+function testImage(path) {
+  return new Promise(resolve => {
+    const image = new Image();
+    image.onload = () => resolve(path);
+    image.onerror = () => resolve(null);
+    image.src = path;
+  });
 }
 
 function useFallback(image) {
@@ -58,32 +55,32 @@ async function resolveImages() {
   const images = [...document.querySelectorAll('img.photo')];
 
   for (const image of images) {
-    const key = image.dataset.imageKey;
-    const directSrc = image.getAttribute('src');
-
-    if (directSrc) {
+    if (image.getAttribute('src')) {
       image.addEventListener('error', () => useFallback(image), { once: true });
       continue;
     }
 
+    const key = image.dataset.imageKey;
     if (!key) {
       useFallback(image);
       continue;
     }
 
     const candidates = buildImageCandidates(key);
-    let matched = false;
+    let matched = null;
 
     for (const candidate of candidates) {
-      if (await urlExists(candidate)) {
-        image.src = candidate;
-        image.addEventListener('error', () => useFallback(image), { once: true });
-        matched = true;
+      // eslint-disable-next-line no-await-in-loop
+      matched = await testImage(candidate);
+      if (matched) {
         break;
       }
     }
 
-    if (!matched) {
+    if (matched) {
+      image.src = matched;
+      image.addEventListener('error', () => useFallback(image), { once: true });
+    } else {
       useFallback(image);
     }
   }
