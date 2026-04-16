@@ -6,7 +6,7 @@
   <title>HoopLab Agency</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,214 +18,188 @@
       </div>
       <nav class="nav-links">
         <a href="#home">Home</a>
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
         <a href="#tryouts">Tryouts</a>
         <a href="#tours">Tours</a>
+        <a href="#workouts">Individual Workouts</a>
+        <a href="#about">About</a>
         <a href="#apply" class="pill">Apply</a>
       </nav>
     </header>
 
     <main>
-      <section id="home" class="hero">
+      <section id="home" class="hero section-card">
         <div class="hero-content">
           <p class="eyebrow">International Basketball Development & Exposure</p>
-          <h1>From Potential to Professional.</h1>
+          <h1>Structured pathways for players pursuing professional basketball.</h1>
           <p class="lede">
-            HoopLab Agency is an international basketball development and exposure agency built for players who are serious about pursuing professional basketball.
-            We create structured pathways through international tryouts, competitive tours, and real performance environments.
+            HoopLab Agency builds real pathways through international tryouts, competitive tours,
+            and targeted player positioning. We do not promise shortcuts—we build systems that reward performance.
           </p>
           <div class="cta-row">
-            <a class="btn primary" href="#apply">Apply for tryouts</a>
-            <a class="btn ghost" href="#services">View services</a>
+            <a class="btn primary" href="#apply">Apply now</a>
+            <a class="btn ghost" href="#about">Meet the team</a>
           </div>
           <div class="stats">
             <div class="stat">
-              <span class="stat-number">3-day</span>
-              <span class="stat-label">Evaluation format</span>
+              <span class="stat-number">3-Day</span>
+              <span class="stat-label">Tryout evaluation format</span>
             </div>
             <div class="stat">
-              <span class="stat-number">Selection</span>
-              <span class="stat-label">Performance-based roster</span>
+              <span class="stat-number">Performance</span>
+              <span class="stat-label">Selection-based opportunities</span>
             </div>
             <div class="stat">
               <span class="stat-number">International</span>
-              <span class="stat-label">Tours and pro environments</span>
+              <span class="stat-label">Tours and market exposure</span>
             </div>
           </div>
         </div>
         <div class="hero-visual">
-          <div class="card">
-            <p class="label">Built for pros</p>
-            <h3>Structured pathways</h3>
-            <p class="hint">Evaluation → Selection → Tours → Positioning</p>
+          <img class="photo main" data-fallback="Home Action" src="images/home-action.jpg" alt="HoopLab player in game action">
+          <div class="hero-grid">
+            <img class="photo" data-fallback="Training Session" src="images/training-session.jpg" alt="Team training session">
+            <img class="photo" data-fallback="International Tour" src="images/tour-game.jpg" alt="International tour game">
           </div>
-          <div class="card alt">
-            <p class="label">No shortcuts</p>
-            <h3>Performance-first</h3>
-            <p class="hint">Players earn exposure in real environments.</p>
-          </div>
-          <div class="badge">HoopLab International</div>
+          <div class="badge">No shortcuts. Real environments.</div>
         </div>
       </section>
 
-      <section id="about" class="section">
+      <section id="tryouts" class="section section-card">
         <div class="section-head">
-          <p class="eyebrow">Who we are</p>
-          <h2>We are an agency, not a training camp.</h2>
+          <p class="eyebrow">Tryouts</p>
+          <h2>Professional evaluation process.</h2>
           <p class="section-lede">
-            HoopLab Agency operates as a structured basketball development and exposure platform.
-            Our role is to connect players with real environments where they can perform, compete, and prove themselves.
+            HoopLab International Tryouts are designed for players ready to compete for opportunities.
+            Selection is based on consistency, decision-making, and performance under pressure.
           </p>
         </div>
         <div class="grid two-col">
-          <div class="tile">
-            <h3>Positioning</h3>
-            <p>We work with players pursuing basketball as a profession. Our responsibility is to create access to real opportunities, not to offer shortcuts.</p>
-          </div>
-          <div class="tile">
-            <h3>Philosophy</h3>
-            <ul class="list">
-              <li>Talent is only the starting point.</li>
-              <li>Professional environments require preparation.</li>
-              <li>Exposure must be earned through performance.</li>
-              <li>Consistency and discipline define long-term success.</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section id="services" class="section services">
-        <div class="section-head">
-          <p class="eyebrow">Services</p>
-          <h2>Structured around three pillars.</h2>
-          <p class="section-lede">Evaluation, exposure, and positioning for players ready to compete professionally.</p>
-        </div>
-        <div class="grid">
-          <div class="tile">
-            <div class="pill small">International Tryouts</div>
-            <h3>Professional evaluation events</h3>
-            <p>3-day structured format, performance-based selection, professional evaluation standards, gateway to international tours.</p>
-          </div>
-          <div class="tile">
-            <div class="pill small">International Tours</div>
-            <h3>Competitive exposure</h3>
-            <p>Games vs professional and semi-professional teams, multiple cities and markets, structured team environment, real competition.</p>
-          </div>
-          <div class="tile">
-            <div class="pill small">Player Positioning</div>
-            <h3>Access to new markets</h3>
-            <p>Structured pathways, professional environment preparation, and opportunities to earn placement through performance.</p>
-          </div>
-        </div>
-      </section>
-
-      <section id="tryouts" class="section stripe">
-        <div class="section-head">
-          <p class="eyebrow">International Tryouts</p>
-          <h2>Professional evaluation. No shortcuts.</h2>
-          <p class="section-lede">The HoopLab International Tryouts in New York are selection-based. Players are evaluated on performance, consistency, and decision-making.</p>
-        </div>
-        <div class="grid two-col">
-          <div class="tile light">
+          <article class="tile">
             <h3>Format</h3>
             <ul class="list">
-              <li>3-day evaluation</li>
+              <li>3-day evaluation structure</li>
               <li>Limited roster spots</li>
               <li>Performance-based selection</li>
               <li>Gateway to international tours</li>
             </ul>
-          </div>
-          <div class="tile light">
-            <h3>Expectation</h3>
-            <p>This is not a showcase. It is a selection process built on professional standards. Not every player qualifies. Not every player is selected.</p>
-            <div class="cta-row">
-              <a class="btn primary" href="#apply">Apply for tryouts</a>
-            </div>
-          </div>
+            <a class="btn primary" href="#apply">Apply for tryouts</a>
+          </article>
+          <article class="tile media-tile">
+            <img class="photo" data-fallback="Tryout Event" src="images/tryouts.jpg" alt="HoopLab tryout event">
+          </article>
         </div>
       </section>
 
-      <section id="tours" class="section">
+      <section id="tours" class="section section-card">
         <div class="section-head">
-          <p class="eyebrow">International Tours</p>
-          <h2>Competitive environments. No guarantees.</h2>
-          <p class="section-lede">Selected players compete against professional teams in multiple cities and markets. We provide the environment to earn opportunities; contracts are never promised.</p>
+          <p class="eyebrow">Tours</p>
+          <h2>Competitive environments in real basketball markets.</h2>
+          <p class="section-lede">
+            Selected players compete against professional and semi-professional teams.
+            We provide structure and exposure, but opportunities must be earned through play.
+          </p>
         </div>
         <div class="grid three-col">
-          <div class="tile">
+          <article class="tile">
             <h3>Real competition</h3>
-            <p>Games vs professional and semi-professional teams with professional scouting eyes on the floor.</p>
-          </div>
-          <div class="tile">
-            <h3>Structured team setting</h3>
-            <p>Travel, preparation, and execution in controlled environments that mirror the professional level.</p>
-          </div>
-          <div class="tile">
-            <h3>Exposure that’s earned</h3>
-            <p>Performance dictates opportunity. We operate within professional basketball, not simulations of it.</p>
-          </div>
+            <p>Games against clubs and teams where performance is tracked and evaluated.</p>
+          </article>
+          <article class="tile">
+            <h3>Team structure</h3>
+            <p>Professional preparation, travel routines, and role accountability in each game.</p>
+          </article>
+          <article class="tile">
+            <h3>Market positioning</h3>
+            <p>Targeted exposure through communication, performance promotion, and networking.</p>
+          </article>
         </div>
       </section>
 
-      <section class="section">
+      <section id="workouts" class="section section-card">
         <div class="section-head">
-          <p class="eyebrow">Standard</p>
-          <h2>Defined structure. No promises. No shortcuts.</h2>
-          <p class="section-lede">We operate with controlled environments, performance-based selection, and international positioning for players prepared to earn it.</p>
+          <p class="eyebrow">Individual Workouts</p>
+          <h2>Personalized development sessions.</h2>
+          <p class="section-lede">
+            Individual workouts focus on game-speed execution, decision-making, and role-specific skill development
+            to prepare athletes for tryouts and professional environments.
+          </p>
         </div>
         <div class="grid two-col">
-          <div class="tile">
-            <h3>Who we work with</h3>
-            <p>Players aiming to compete professionally who understand performance standards, are willing to be evaluated, and are prepared to compete under pressure.</p>
-          </div>
-          <div class="tile">
-            <h3>What we do</h3>
-            <p>Assess in controlled environments, place players in real competition, and position them through performance.</p>
-          </div>
+          <article class="tile">
+            <h3>What we focus on</h3>
+            <ul class="list">
+              <li>Position-specific skill work</li>
+              <li>Live reads and game situations</li>
+              <li>Conditioning for competitive pace</li>
+              <li>Mental approach and professional habits</li>
+            </ul>
+            <a class="btn primary" href="#apply">Apply for individual workouts</a>
+          </article>
+          <article class="tile media-tile">
+            <img class="photo" data-fallback="Individual Workout" src="images/individual-workout.jpg" alt="Coach-led individual basketball workout">
+          </article>
         </div>
       </section>
 
-      <section class="section leadership">
+      <section id="about" class="section section-card">
         <div class="section-head">
-          <p class="eyebrow">Coaches & Leadership</p>
-          <h2>Led by people who compete.</h2>
+          <p class="eyebrow">About</p>
+          <h2>Leadership team</h2>
+          <p class="section-lede">Our team combines coaching, scouting, and pro playing experience to guide athletes through structured pathways.</p>
         </div>
-        <div class="grid two-col">
-          <div class="tile">
+        <div class="grid three-col team-grid">
+          <article class="tile person">
+            <img class="photo portrait" data-fallback="Harun Subasic" src="images/harun-subasic.jpg" alt="Harun Subasic">
             <h3>Harun Subasic</h3>
-            <p>Founder & Head of Development. Active player and coach focused on building structured pathways and connecting players with real opportunities.</p>
-          </div>
-          <div class="tile">
+            <p class="role">Coach</p>
+          </article>
+          <article class="tile person">
+            <img class="photo portrait" data-fallback="Zlatan Besirevic" src="images/zlatan-besirevic.jpg" alt="Zlatan Besirevic">
             <h3>Zlatan Besirevic</h3>
-            <p>Performance & Player Development. Brings high-level playing experience and a competitive mindset, preparing players for high-pressure game environments.</p>
-          </div>
+            <p class="role">Scout, Trainer</p>
+          </article>
+          <article class="tile person">
+            <img class="photo portrait" data-fallback="Xavier Boyd" src="images/xavier-boyd.jpg" alt="Xavier Boyd">
+            <h3>Xavier Boyd</h3>
+            <p class="role">Scout, Pro Player</p>
+          </article>
         </div>
       </section>
 
-      <section class="section cta-band stripe">
-        <div class="cta-band-inner">
-          <div>
-            <p class="eyebrow">Final statement</p>
-            <h2>Professional basketball is earned.</h2>
-            <p class="section-lede">HoopLab Agency exists for players ready to compete for their next level.</p>
-          </div>
-          <div class="cta-row">
-            <a class="btn primary" href="#apply">Apply for International Tryouts</a>
-            <a class="btn ghost" href="#tours">Request program access</a>
-          </div>
+      <section class="section section-card story">
+        <div class="section-head">
+          <p class="eyebrow">Player Success Story</p>
+          <h2>Xavier Boyd – Player Success Story</h2>
         </div>
+        <article class="tile story-content">
+          <p>HoopLab Agency is committed to creating real pathways for players to establish themselves in new basketball markets. Xavier Boyd is a strong example of this process.</p>
+          <p>After arriving in Germany, Xavier joined the Böblingen Panthers, a smaller club competing at the regional level. This step allowed him to adapt to the European game, gain minutes, and showcase his abilities in a structured environment.</p>
+          <p>Through consistent performance and targeted exposure, HoopLab Agency supported his positioning within the German basketball market. With strategic communication, performance promotion, and active networking, interest from higher-level clubs quickly followed.</p>
+          <p>After just half a season, Xavier Boyd secured a move to Kirchheim, a Regional League program, marking the next step in his professional pathway.</p>
+          <p>This transition reflects the core mission of HoopLab Agency: Creating structured opportunities, supporting player positioning, and helping athletes establish themselves in competitive markets.</p>
+          <p class="quote">We do not promise shortcuts. We build pathways.</p>
+        </article>
       </section>
 
-      <section id="apply" class="section contact">
+      <section id="apply" class="section section-card contact">
         <div class="contact-card">
           <div>
             <p class="eyebrow">Apply</p>
-            <h2>Submit your profile for evaluation.</h2>
-            <p>Applications are reviewed on experience, potential, and readiness. Selection is performance-based.</p>
+            <h2>Apply for programs and consultation.</h2>
+            <p>Choose the program below and submit your profile. All applications are reviewed by our team.</p>
           </div>
           <form class="contact-form" id="apply-form" novalidate>
             <input type="text" name="extra_field" class="honeypot" tabindex="-1" autocomplete="off">
+            <label>
+              Program
+              <select name="program" required>
+                <option value="">Select application type</option>
+                <option value="tryouts">Tryouts</option>
+                <option value="tours">Tours</option>
+                <option value="individual-workouts">Individual Workouts</option>
+                <option value="consultation">Consultation</option>
+              </select>
+            </label>
             <label>
               Name
               <input type="text" name="name" placeholder="Your name" required>
@@ -240,7 +214,7 @@
             </label>
             <label>
               Playing experience
-              <textarea name="experience" rows="2" placeholder="Teams, levels, years" required></textarea>
+              <textarea name="experience" rows="3" placeholder="Teams, levels, years" required></textarea>
             </label>
             <label>
               Email
@@ -250,8 +224,8 @@
               Phone / WhatsApp
               <input type="tel" name="phone" placeholder="+1 555 555 5555" required>
             </label>
-            <button type="submit" class="btn primary full">Apply now</button>
-            <p class="hint" id="form-hint">We respond after review. Performance-based selection; roster spots are limited.</p>
+            <button type="submit" class="btn primary full">Submit application</button>
+            <p class="hint" id="form-hint">We respond after review. Selection remains performance-based and opportunity-specific.</p>
           </form>
         </div>
       </section>
@@ -263,9 +237,10 @@
         <span class="brand-name">HoopLab Agency</span>
       </div>
       <div class="footer-links">
-        <a href="#services">Services</a>
         <a href="#tryouts">Tryouts</a>
         <a href="#tours">Tours</a>
+        <a href="#workouts">Individual Workouts</a>
+        <a href="#about">About</a>
         <a href="#apply">Apply</a>
       </div>
       <p class="hint">International Basketball Development & Exposure</p>
