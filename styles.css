@@ -366,6 +366,7 @@ textarea {
   flex-wrap: wrap;
   color: #304562;
   font-weight: 600;
+  color: #25364f;
 }
 
 @media (max-width: 980px) {
