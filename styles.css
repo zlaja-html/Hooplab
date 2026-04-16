@@ -315,7 +315,10 @@ a {
   gap: 20px;
 }
 
-.contact-form {
+.footer {
+  margin-top: 28px;
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
   display: grid;
   gap: 10px;
 }
