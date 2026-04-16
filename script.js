@@ -11,14 +11,85 @@ document.querySelectorAll('a[href^="#"]').forEach(link => {
   });
 });
 
-document.querySelectorAll('img.photo').forEach(image => {
-  image.addEventListener('error', () => {
-    const placeholder = document.createElement('div');
-    placeholder.className = 'photo-missing';
-    placeholder.textContent = image.dataset.fallback || image.alt || 'Image';
-    image.replaceWith(placeholder);
+async function urlExists(url) {
+  try {
+    let response = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+    if (response.status === 405) {
+      response = await fetch(url, { method: 'GET', cache: 'no-store' });
+    }
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
+
+function buildImageCandidates(key) {
+  const clean = key.trim();
+  const variants = [
+    clean,
+    clean.toLowerCase(),
+    clean.replace(/-/g, '_'),
+    clean.replace(/-/g, ' '),
+    clean.replace(/-/g, '')
+  ];
+  const folders = ['', 'images/', 'img/', 'assets/', 'assets/images/', 'uploads/', 'public/', 'public/images/'];
+  const ext = ['', '.jpg', '.jpeg', '.png', '.webp', '.avif', '.JPG', '.JPEG', '.PNG', '.WEBP'];
+
+  const candidates = new Set();
+  variants.forEach(name => {
+    folders.forEach(folder => {
+      ext.forEach(suffix => {
+        candidates.add(`${folder}${name}${suffix}`);
+      });
+    });
   });
-});
+
+  return [...candidates];
+}
+
+function useFallback(image) {
+  const placeholder = document.createElement('div');
+  placeholder.className = 'photo-missing';
+  placeholder.textContent = image.dataset.fallback || image.alt || 'Image';
+  image.replaceWith(placeholder);
+}
+
+async function resolveImages() {
+  const images = [...document.querySelectorAll('img.photo')];
+
+  for (const image of images) {
+    const key = image.dataset.imageKey;
+    const directSrc = image.getAttribute('src');
+
+    if (directSrc) {
+      image.addEventListener('error', () => useFallback(image), { once: true });
+      continue;
+    }
+
+    if (!key) {
+      useFallback(image);
+      continue;
+    }
+
+    const candidates = buildImageCandidates(key);
+    let matched = false;
+
+    for (const candidate of candidates) {
+      if (await urlExists(candidate)) {
+        image.src = candidate;
+        image.addEventListener('error', () => useFallback(image), { once: true });
+        matched = true;
+        break;
+      }
+    }
+
+    if (!matched) {
+      useFallback(image);
+    }
+  }
+}
+
+resolveImages();
 
 const form = document.querySelector('#apply-form');
 if (form) {
