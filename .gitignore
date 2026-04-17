@@ -1,0 +1,5 @@
+.env
+.env.*
+*.env
+supabasepassword.env
+node_modules/

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HoopLab staff appointment overview for workout and group session bookings.">
+  <title>HoopLab Staff Appointments</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html#home" aria-label="HoopLab Agency home">
+      <img class="brand-logo" src="images/Hooplablogo-sponzor.svg" alt="">
+      <span class="brand-copy">
+        <strong>HoopLab</strong>
+        <span>Staff</span>
+      </span>
+    </a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      Menu
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Staff navigation">
+      <a href="index.html#apply">Public application</a>
+      <a class="nav-cta" href="index.html#workouts">Workout booking</a>
+    </nav>
+  </header>
+
+  <main class="staff-page">
+    <section class="section staff-login" id="staff-login">
+      <div class="section-copy">
+        <p class="eyebrow">Staff access</p>
+        <h1>Booked appointments.</h1>
+        <p>
+          Enter the staff code to view workout and group session bookings.
+        </p>
+      </div>
+
+      <form class="apply-form" id="staff-form">
+        <label>
+          Staff code
+          <input type="password" name="staff_code" autocomplete="current-password" required>
+        </label>
+        <button class="button primary full" type="submit">View appointments</button>
+        <p class="form-hint" id="staff-hint" role="status">
+          Staff access is protected on the server and uses the shared booking database.
+        </p>
+      </form>
+    </section>
+
+    <section class="section staff-dashboard" id="staff-dashboard" hidden>
+      <div class="section-heading">
+        <p class="eyebrow">Bookings</p>
+        <h2>Booked workouts and group sessions.</h2>
+      </div>
+
+      <div class="staff-actions">
+        <button class="button primary" type="button" id="export-bookings">Export CSV</button>
+        <button class="button secondary light" type="button" id="lock-staff">Lock</button>
+      </div>
+
+      <div class="appointment-list" id="appointment-list"></div>
+    </section>
+  </main>
+
+  <script src="appointments.js"></script>
+  <script src="script.js"></script>
+  <script src="employee.js"></script>
+</body>
+</html>
