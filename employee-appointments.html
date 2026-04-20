@@ -55,57 +55,65 @@
       <div class="section-heading">
         <p class="eyebrow">Bookings</p>
         <h2>Manage appointments.</h2>
+        <p class="section-note">
+          Add availability, review player requests, and confirm or refuse each booking.
+        </p>
       </div>
 
-      <form class="apply-form staff-availability-form" id="availability-form">
-        <h3>Add available appointment</h3>
-        <div class="form-row">
-          <label>
-            Program
-            <select name="program" required>
-              <option value="individual-workouts">Individual Workout</option>
-              <option value="group-sessions">Group Session</option>
-            </select>
-          </label>
-          <label>
-            Capacity
-            <input type="number" name="capacity" min="1" max="30" value="1" required>
-          </label>
-        </div>
-        <div class="form-row">
-          <label>
-            Date
-            <input type="date" name="appointment_date" required>
-          </label>
-          <label>
-            Time
-            <input type="time" name="appointment_time" required>
-          </label>
-        </div>
-        <label>
-          Display label
-          <input type="text" name="label" placeholder="Monday, May 4" required>
-        </label>
-        <label>
-          Note
-          <input type="text" name="note" placeholder="Group development session">
-        </label>
-        <button class="button primary full" type="submit">Add appointment</button>
-        <p class="form-hint" id="availability-hint" role="status"></p>
-      </form>
+      <div class="staff-layout">
+        <section class="staff-panel">
+          <form class="apply-form staff-availability-form" id="availability-form">
+            <h3>Add available appointment</h3>
+            <div class="form-row">
+              <label>
+                Program
+                <select name="program" required>
+                  <option value="individual-workouts">Individual Workout</option>
+                  <option value="group-sessions">Group Session</option>
+                </select>
+              </label>
+              <label>
+                Capacity
+                <input type="number" name="capacity" min="1" max="30" value="1" required>
+              </label>
+            </div>
+            <div class="form-row">
+              <label>
+                Date
+                <input type="date" name="appointment_date" required>
+              </label>
+              <label>
+                Time
+                <input type="time" name="appointment_time" required>
+              </label>
+            </div>
+            <label>
+              Display label
+              <input type="text" name="label" placeholder="Monday, May 4" required>
+            </label>
+            <label>
+              Note
+              <input type="text" name="note" placeholder="Group development session">
+            </label>
+            <button class="button primary full" type="submit">Add appointment</button>
+            <p class="form-hint" id="availability-hint" role="status"></p>
+          </form>
+        </section>
 
-      <div class="staff-panel">
-        <h3>Available appointments</h3>
-        <div class="appointment-list" id="availability-list"></div>
+        <section class="staff-panel">
+          <h3>Available appointments</h3>
+          <div class="appointment-list compact" id="availability-list"></div>
+        </section>
       </div>
 
       <div class="staff-actions">
-        <button class="button primary" type="button" id="export-bookings">Export CSV</button>
         <button class="button secondary light" type="button" id="lock-staff">Lock</button>
       </div>
 
-      <h3>Player bookings</h3>
-      <div class="appointment-list" id="appointment-list"></div>
+      <section class="staff-panel">
+        <h3>Player bookings</h3>
+        <div class="appointment-list" id="appointment-list"></div>
+      </section>
     </section>
   </main>
 

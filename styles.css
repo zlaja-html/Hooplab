@@ -295,6 +295,12 @@ h3 {
   background: #fff;
 }
 
+.button.danger {
+  color: #fff;
+  background: var(--red);
+  box-shadow: 0 14px 30px rgba(180, 35, 24, 0.18);
+}
+
 .button.full {
   width: 100%;
 }
@@ -830,11 +836,28 @@ textarea {
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 18px;
+  justify-content: flex-end;
+}
+
+.staff-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.86fr) minmax(0, 1.14fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 24px;
 }
 
 .staff-availability-form,
 .staff-panel {
   margin-bottom: 26px;
+}
+
+.staff-panel {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: var(--shadow-soft);
 }
 
 .staff-availability-form h3,
@@ -848,6 +871,10 @@ textarea {
   gap: 12px;
 }
 
+.appointment-list.compact {
+  gap: 10px;
+}
+
 .appointment-card {
   display: grid;
   gap: 6px;
@@ -855,6 +882,15 @@ textarea {
   border-radius: 8px;
   padding: 16px;
   background: #fff;
+}
+
+.appointment-card-head,
+.booking-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 
 .appointment-card strong {
@@ -865,6 +901,44 @@ textarea {
 .appointment-card span {
   color: var(--text);
   line-height: 1.45;
+}
+
+.booking-group {
+  display: grid;
+  gap: 12px;
+}
+
+.booking-group h4 {
+  margin: 18px 0 0;
+  color: var(--ink);
+  font-size: 16px;
+}
+
+.booking-group:first-child h4 {
+  margin-top: 0;
+}
+
+.status-pill {
+  border-radius: 999px;
+  padding: 6px 9px;
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.status-pill.pending {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.status-pill.accepted {
+  color: #065f46;
+  background: #d1fae5;
+}
+
+.status-pill.refused {
+  color: #991b1b;
+  background: #fee2e2;
 }
 
 @media (max-width: 1060px) {
@@ -885,7 +959,8 @@ textarea {
   }
 
   .program-grid,
-  .team-grid {
+  .team-grid,
+  .staff-layout {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -945,6 +1020,7 @@ textarea {
   .metrics,
   .program-grid,
   .team-grid,
+  .staff-layout,
   .form-row,
   .form-row:last-of-type {
     grid-template-columns: 1fr;

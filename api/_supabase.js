@@ -42,6 +42,7 @@ export async function listBookings() {
     'phone',
     'status',
     'accepted_at',
+    'refused_at',
     'created_at'
   ].join(',');
   const response = await supabaseFetch(BOOKINGS_TABLE, `?select=${fields}&order=created_at.desc`);
@@ -65,7 +66,7 @@ export async function listBookingCounts() {
   const rows = await response.json();
 
   return rows.reduce((counts, row) => {
-    if (row.appointment && row.status !== 'cancelled') {
+    if (row.appointment && row.status !== 'cancelled' && row.status !== 'refused') {
       counts[row.appointment] = (counts[row.appointment] || 0) + 1;
     }
 
@@ -88,6 +89,27 @@ export async function acceptBooking(id) {
   if (!response.ok) {
     const details = await response.text();
     throw new Error(`Supabase accept failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+export async function refuseBooking(id) {
+  const response = await supabaseFetch(BOOKINGS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify({
+      status: 'refused',
+      refused_at: new Date().toISOString()
+    })
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase refuse failed: ${response.status} ${details}`);
   }
 
   const rows = await response.json();

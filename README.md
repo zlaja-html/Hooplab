@@ -58,6 +58,9 @@ add column if not exists status text not null default 'pending';
 alter table hooplab_bookings
 add column if not exists accepted_at timestamptz;
 
+alter table hooplab_bookings
+add column if not exists refused_at timestamptz;
+
 create table if not exists hooplab_availability (
   id uuid primary key default gen_random_uuid(),
   program text not null,
@@ -73,7 +76,7 @@ create table if not exists hooplab_availability (
 ```
 
 The unique index prevents two players from booking the same individual workout slot. Group sessions can receive multiple bookings; their visible capacity is controlled in `appointments.js`.
-Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`.
+Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`. Staff can accept or refuse player booking requests, and the player receives an email update.
 
 Add these Vercel environment variables:
 

@@ -6,7 +6,6 @@ const list = document.getElementById('appointment-list');
 const availabilityForm = document.getElementById('availability-form');
 const availabilityHint = document.getElementById('availability-hint');
 const availabilityList = document.getElementById('availability-list');
-const exportButton = document.getElementById('export-bookings');
 const lockButton = document.getElementById('lock-staff');
 let currentBookings = [];
 let currentAvailability = [];
@@ -73,6 +72,11 @@ function renderBookings(bookings) {
   const sorted = [...bookings].sort((a, b) => {
     return String(a.appointment).localeCompare(String(b.appointment));
   });
+  const groups = [
+    ['pending', 'Pending requests'],
+    ['accepted', 'Accepted bookings'],
+    ['refused', 'Refused bookings']
+  ];
 
   list.innerHTML = '';
 
@@ -84,23 +88,49 @@ function renderBookings(bookings) {
     return;
   }
 
-  sorted.forEach(booking => {
-    const card = document.createElement('article');
-    card.className = 'appointment-card';
-    card.innerHTML = `
-      <strong>${escapeHtml(formatAppointment(booking))}</strong>
-      <span>${escapeHtml(labelProgram(booking.program || 'appointment'))} - ${escapeHtml(booking.status || 'pending')}</span>
-      <span>${escapeHtml(booking.name || 'Unknown player')} - ${escapeHtml(booking.position || 'Position missing')} - Age ${escapeHtml(booking.age || '-')}</span>
-      <span>${escapeHtml(booking.email || '')}</span>
-      <span>${escapeHtml(booking.phone || '')}</span>
-      <span>${escapeHtml(booking.experience || '')}</span>
-      ${booking.status === 'accepted' ? '' : `<button class="button primary" type="button" data-accept-booking="${escapeHtml(booking.id)}">Accept and email player</button>`}
-    `;
-    list.append(card);
+  groups.forEach(([status, title]) => {
+    const groupBookings = sorted.filter(booking => (booking.status || 'pending') === status);
+
+    if (!groupBookings.length) {
+      return;
+    }
+
+    const section = document.createElement('section');
+    section.className = 'booking-group';
+    section.innerHTML = `<h4>${escapeHtml(title)}</h4>`;
+
+    groupBookings.forEach(booking => {
+      const card = document.createElement('article');
+      card.className = `appointment-card status-${escapeHtml(status)}`;
+      card.innerHTML = `
+        <div class="appointment-card-head">
+          <strong>${escapeHtml(formatAppointment(booking))}</strong>
+          <span class="status-pill ${escapeHtml(status)}">${escapeHtml(status)}</span>
+        </div>
+        <span>${escapeHtml(labelProgram(booking.program || 'appointment'))}</span>
+        <span>${escapeHtml(booking.name || 'Unknown player')} - ${escapeHtml(booking.position || 'Position missing')} - Age ${escapeHtml(booking.age || '-')}</span>
+        <span>${escapeHtml(booking.email || '')}</span>
+        <span>${escapeHtml(booking.phone || '')}</span>
+        <span>${escapeHtml(booking.experience || '')}</span>
+        ${status === 'pending' ? `
+          <div class="booking-actions">
+            <button class="button primary" type="button" data-accept-booking="${escapeHtml(booking.id)}">Accept and email player</button>
+            <button class="button danger" type="button" data-refuse-booking="${escapeHtml(booking.id)}">Refuse and email player</button>
+          </div>
+        ` : ''}
+      `;
+      section.append(card);
+    });
+
+    list.append(section);
   });
 
   list.querySelectorAll('[data-accept-booking]').forEach(button => {
     button.addEventListener('click', () => acceptBooking(button.dataset.acceptBooking, button));
+  });
+
+  list.querySelectorAll('[data-refuse-booking]').forEach(button => {
+    button.addEventListener('click', () => refuseBooking(button.dataset.refuseBooking, button));
   });
 }
 
@@ -164,6 +194,32 @@ async function acceptBooking(id, button) {
   }
 }
 
+async function refuseBooking(id, button) {
+  button.disabled = true;
+  button.textContent = 'Refusing...';
+
+  try {
+    const response = await fetch('/api/refuse-booking', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      button.disabled = false;
+      button.textContent = result.error || 'Refuse failed';
+      return;
+    }
+
+    await loadBookings();
+  } catch {
+    button.disabled = false;
+    button.textContent = 'Refuse failed';
+  }
+}
+
 async function toggleAvailability(id, active) {
   availabilityHint.className = 'form-hint';
   availabilityHint.textContent = 'Updating appointment...';
@@ -210,38 +266,6 @@ function formatAppointment(booking) {
   }
 
   return booking.appointment || 'No appointment';
-}
-
-function exportCsv() {
-  const headers = [
-    'program',
-    'appointment',
-    'appointment_date',
-    'appointment_time',
-    'name',
-    'age',
-    'position',
-    'experience',
-    'email',
-    'phone',
-    'created_at'
-  ];
-  const rows = currentBookings.map(booking => {
-    return headers.map(header => csvCell(booking[header] || '')).join(',');
-  });
-  const csv = [headers.join(','), ...rows].join('\n');
-  const blob = new Blob([csv], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-
-  link.href = url;
-  link.download = 'hooplab-bookings.csv';
-  link.click();
-  URL.revokeObjectURL(url);
-}
-
-function csvCell(value) {
-  return `"${String(value).replaceAll('"', '""')}"`;
 }
 
 function escapeHtml(value) {
@@ -315,7 +339,6 @@ availabilityForm?.addEventListener('submit', async event => {
   }
 });
 
-exportButton?.addEventListener('click', exportCsv);
 lockButton?.addEventListener('click', lockDashboard);
 
 fetch('/api/bookings', { credentials: 'include' })
