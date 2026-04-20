@@ -35,23 +35,51 @@ document.querySelectorAll('img').forEach(image => {
 });
 
 const form = document.querySelector('#apply-form');
-const slots = window.HOOPLAB_WORKOUT_SLOTS || [];
-const groupSlots = window.HOOPLAB_GROUP_SESSION_SLOTS || [];
+let slots = window.HOOPLAB_WORKOUT_SLOTS || [];
+let groupSlots = window.HOOPLAB_GROUP_SESSION_SLOTS || [];
 let bookingCounts = {};
 
-async function refreshBookingCounts() {
+async function refreshBookingData() {
   try {
-    const response = await fetch('/api/bookings?public=1');
+    const [bookingResponse, availabilityResponse] = await Promise.all([
+      fetch('/api/bookings?public=1'),
+      fetch('/api/availability?public=1')
+    ]);
 
-    if (!response.ok) {
-      return;
+    if (bookingResponse.ok) {
+      const result = await bookingResponse.json();
+      bookingCounts = result.counts || {};
     }
 
-    const result = await response.json();
-    bookingCounts = result.counts || {};
+    if (availabilityResponse.ok) {
+      const result = await availabilityResponse.json();
+      const availability = result.availability || [];
+      const workoutSlots = availabilityToSlotGroups(availability, 'individual-workouts');
+      const sessionSlots = availabilityToSlotGroups(availability, 'group-sessions');
+
+      if (workoutSlots.length) {
+        slots = workoutSlots;
+      }
+
+      if (sessionSlots.length) {
+        groupSlots = sessionSlots;
+      }
+    }
   } catch {
     bookingCounts = {};
   }
+}
+
+function availabilityToSlotGroups(availability, program) {
+  return availability
+    .filter(slot => slot.program === program)
+    .map(slot => ({
+      date: slot.appointment_date,
+      label: slot.label || slot.appointment_date,
+      note: slot.note,
+      capacity: slot.capacity || 1,
+      times: [String(slot.appointment_time || '').slice(0, 5)]
+    }));
 }
 
 function appointmentId(day, time) {
@@ -203,7 +231,7 @@ if (form) {
 
   programSelect?.addEventListener('change', syncScheduler);
 
-  refreshBookingCounts().finally(syncScheduler);
+  refreshBookingData().finally(syncScheduler);
 
   form.addEventListener('submit', async event => {
     event.preventDefault();
@@ -253,14 +281,14 @@ if (form) {
       const result = await response.json().catch(() => ({}));
 
       if (response.ok) {
-        await refreshBookingCounts();
+        await refreshBookingData();
         hint.className = 'form-hint success';
         hint.textContent =
           result.message || 'Application received. We will review and respond after evaluation.';
         form.reset();
         syncScheduler();
       } else {
-        await refreshBookingCounts();
+        await refreshBookingData();
         syncScheduler();
         hint.className = 'form-hint error';
         hint.textContent =

@@ -744,6 +744,35 @@ textarea {
     #fff;
 }
 
+.legal-section {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  background: #fff;
+}
+
+.legal-section article {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+  background: linear-gradient(180deg, #fff, #f8fafc);
+  box-shadow: var(--shadow-soft);
+}
+
+.legal-section h2 {
+  font-size: clamp(24px, 2.6vw, 34px);
+}
+
+.legal-section p {
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.legal-section a {
+  color: var(--blue);
+  font-weight: 800;
+}
+
 .sponsor-section h2 {
   font-size: clamp(24px, 2.5vw, 34px);
 }
@@ -830,6 +859,7 @@ textarea {
   .story-section,
   .apply-section,
   .sponsor-section,
+  .legal-section,
   .staff-login {
     grid-template-columns: 1fr;
   }

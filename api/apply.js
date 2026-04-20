@@ -1,10 +1,9 @@
 // Serverless handler for Vercel/Netlify style deployments.
 // Validates input and emails applications to the HoopLab inbox via Resend.
+import { sendEmail } from './_email.js';
 import { createBooking, hasSupabaseConfig } from './_supabase.js';
 
 const REQUIRED = ['program', 'name', 'age', 'position', 'experience', 'email', 'phone'];
-const DESTINATION = process.env.DESTINATION_EMAIL || 'contact@hooplab-agency.com';
-const DEFAULT_FROM = 'HoopLab Agency <onboarding@resend.dev>'; // Resend-provided sender that does not require your domain verification.
 const BOOKING_PROGRAMS = new Set(['individual-workouts', 'group-sessions']);
 
 export default async function handler(req, res) {
@@ -61,13 +60,6 @@ export default async function handler(req, res) {
     }
   }
 
-  let from = process.env.RESEND_FROM || DEFAULT_FROM;
-  // Basic validation to avoid 422 from Resend
-  if (!/^[^<]*<[^@>]+@[^>]+>$/.test(from) && !/^[^@]+@[^@]+$/.test(from)) {
-    console.warn('Invalid RESEND_FROM value, falling back to default sender');
-    from = DEFAULT_FROM;
-  }
-
   const text = [
     `New HoopLab application`,
     `Program: ${body.program}`,
@@ -81,25 +73,10 @@ export default async function handler(req, res) {
   ].filter(Boolean).join('\n');
 
   try {
-    const resp = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from,
-        to: [DESTINATION],
-        subject: `New HoopLab ${body.program} application`,
-        text
-      })
+    await sendEmail({
+      subject: `New HoopLab ${body.program} application`,
+      text
     });
-
-    if (!resp.ok) {
-      const err = await resp.text();
-      console.error('Resend email send failed', resp.status, err);
-      return res.status(502).json({ error: 'Email send failed', details: err });
-    }
 
     return res.status(200).json({ ok: true, message: 'Application received' });
   } catch (e) {

@@ -51,9 +51,29 @@ create table if not exists hooplab_bookings (
 create unique index if not exists hooplab_unique_individual_workout_slot
 on hooplab_bookings (appointment)
 where program = 'individual-workouts';
+
+alter table hooplab_bookings
+add column if not exists status text not null default 'pending';
+
+alter table hooplab_bookings
+add column if not exists accepted_at timestamptz;
+
+create table if not exists hooplab_availability (
+  id uuid primary key default gen_random_uuid(),
+  program text not null,
+  appointment text not null,
+  appointment_date date not null,
+  appointment_time time not null,
+  label text not null,
+  note text,
+  capacity integer not null default 1,
+  active boolean not null default true,
+  created_at timestamptz not null default now()
+);
 ```
 
 The unique index prevents two players from booking the same individual workout slot. Group sessions can receive multiple bookings; their visible capacity is controlled in `appointments.js`.
+Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`.
 
 Add these Vercel environment variables:
 
@@ -61,6 +81,7 @@ Add these Vercel environment variables:
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 SUPABASE_BOOKINGS_TABLE=hooplab_bookings
+SUPABASE_AVAILABILITY_TABLE=hooplab_availability
 STAFF_ACCESS_CODE=choose-a-private-staff-code
 STAFF_SESSION_SECRET=choose-a-long-random-secret
 RESEND_API_KEY=your_resend_key

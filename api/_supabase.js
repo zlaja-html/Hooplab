@@ -1,11 +1,12 @@
-const TABLE = process.env.SUPABASE_BOOKINGS_TABLE || 'hooplab_bookings';
+const BOOKINGS_TABLE = process.env.SUPABASE_BOOKINGS_TABLE || 'hooplab_bookings';
+const AVAILABILITY_TABLE = process.env.SUPABASE_AVAILABILITY_TABLE || 'hooplab_availability';
 
 export function hasSupabaseConfig() {
   return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 }
 
 export async function createBooking(booking) {
-  const response = await supabaseFetch('', {
+  const response = await supabaseFetch(BOOKINGS_TABLE, '', {
     method: 'POST',
     headers: {
       Prefer: 'return=representation'
@@ -39,9 +40,11 @@ export async function listBookings() {
     'experience',
     'email',
     'phone',
+    'status',
+    'accepted_at',
     'created_at'
   ].join(',');
-  const response = await supabaseFetch(`?select=${fields}&order=created_at.desc`);
+  const response = await supabaseFetch(BOOKINGS_TABLE, `?select=${fields}&order=created_at.desc`);
 
   if (!response.ok) {
     const details = await response.text();
@@ -52,7 +55,7 @@ export async function listBookings() {
 }
 
 export async function listBookingCounts() {
-  const response = await supabaseFetch('?select=appointment');
+  const response = await supabaseFetch(BOOKINGS_TABLE, '?select=appointment,status');
 
   if (!response.ok) {
     const details = await response.text();
@@ -62,7 +65,7 @@ export async function listBookingCounts() {
   const rows = await response.json();
 
   return rows.reduce((counts, row) => {
-    if (row.appointment) {
+    if (row.appointment && row.status !== 'cancelled') {
       counts[row.appointment] = (counts[row.appointment] || 0) + 1;
     }
 
@@ -70,14 +73,98 @@ export async function listBookingCounts() {
   }, {});
 }
 
-async function supabaseFetch(query = '', options = {}) {
+export async function acceptBooking(id) {
+  const response = await supabaseFetch(BOOKINGS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify({
+      status: 'accepted',
+      accepted_at: new Date().toISOString()
+    })
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase accept failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+export async function listAvailability({ activeOnly = false } = {}) {
+  const fields = [
+    'id',
+    'program',
+    'appointment',
+    'appointment_date',
+    'appointment_time',
+    'label',
+    'note',
+    'capacity',
+    'active',
+    'created_at'
+  ].join(',');
+  const activeQuery = activeOnly ? '&active=eq.true' : '';
+  const response = await supabaseFetch(
+    AVAILABILITY_TABLE,
+    `?select=${fields}${activeQuery}&order=appointment_date.asc&order=appointment_time.asc`
+  );
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase availability list failed: ${response.status} ${details}`);
+  }
+
+  return response.json();
+}
+
+export async function createAvailability(slot) {
+  const response = await supabaseFetch(AVAILABILITY_TABLE, '', {
+    method: 'POST',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify(slot)
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase availability insert failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+export async function updateAvailability(id, updates) {
+  const response = await supabaseFetch(AVAILABILITY_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify(updates)
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase availability update failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+async function supabaseFetch(table, query = '', options = {}) {
   if (!hasSupabaseConfig()) {
     throw new Error('Supabase is not configured');
   }
 
   const baseUrl = process.env.SUPABASE_URL.replace(/\/$/, '');
 
-  return fetch(`${baseUrl}/rest/v1/${TABLE}${query}`, {
+  return fetch(`${baseUrl}/rest/v1/${table}${query}`, {
     ...options,
     headers: {
       apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
