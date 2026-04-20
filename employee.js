@@ -14,6 +14,8 @@ let currentAvailability = [];
 async function showDashboard() {
   staffLogin.hidden = true;
   staffDashboard.hidden = false;
+  staffHint.textContent = '';
+  staffHint.className = 'form-hint';
   await Promise.all([loadAvailability(), loadBookings()]);
 }
 
