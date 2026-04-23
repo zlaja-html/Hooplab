@@ -156,15 +156,24 @@ function renderAvailability(availability) {
       <strong>${escapeHtml(slot.appointment || '')}</strong>
       <span>${escapeHtml(labelProgram(slot.program))} - Capacity ${escapeHtml(slot.capacity || 1)} - ${slot.active ? 'Active' : 'Hidden'}</span>
       <span>${escapeHtml(slot.label || '')}${slot.note ? ` - ${escapeHtml(slot.note)}` : ''}</span>
-      <button class="button secondary light" type="button" data-toggle-slot="${escapeHtml(slot.id)}" data-active="${slot.active ? 'false' : 'true'}">
-        ${slot.active ? 'Hide appointment' : 'Show appointment'}
-      </button>
+      <div class="booking-actions">
+        <button class="button secondary light" type="button" data-toggle-slot="${escapeHtml(slot.id)}" data-active="${slot.active ? 'false' : 'true'}">
+          ${slot.active ? 'Hide appointment' : 'Show appointment'}
+        </button>
+        <button class="button danger" type="button" data-delete-slot="${escapeHtml(slot.id)}">
+          Delete appointment
+        </button>
+      </div>
     `;
     availabilityList.append(card);
   });
 
   availabilityList.querySelectorAll('[data-toggle-slot]').forEach(button => {
     button.addEventListener('click', () => toggleAvailability(button.dataset.toggleSlot, button.dataset.active === 'true'));
+  });
+
+  availabilityList.querySelectorAll('[data-delete-slot]').forEach(button => {
+    button.addEventListener('click', () => deleteAvailability(button.dataset.deleteSlot, button));
   });
 }
 
@@ -245,6 +254,43 @@ async function toggleAvailability(id, active) {
   } catch {
     availabilityHint.className = 'form-hint error';
     availabilityHint.textContent = 'Could not update appointment.';
+  }
+}
+
+async function deleteAvailability(id, button) {
+  const confirmed = window.confirm('Delete this appointment completely? This cannot be undone.');
+
+  if (!confirmed) {
+    return;
+  }
+
+  availabilityHint.className = 'form-hint';
+  availabilityHint.textContent = 'Deleting appointment...';
+  button.disabled = true;
+
+  try {
+    const response = await fetch('/api/availability', {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      button.disabled = false;
+      availabilityHint.className = 'form-hint error';
+      availabilityHint.textContent = result.error || 'Could not delete appointment.';
+      return;
+    }
+
+    availabilityHint.className = 'form-hint success';
+    availabilityHint.textContent = 'Appointment deleted.';
+    await loadAvailability();
+  } catch {
+    button.disabled = false;
+    availabilityHint.className = 'form-hint error';
+    availabilityHint.textContent = 'Could not delete appointment.';
   }
 }
 

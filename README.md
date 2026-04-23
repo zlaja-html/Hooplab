@@ -73,10 +73,18 @@ create table if not exists hooplab_availability (
   active boolean not null default true,
   created_at timestamptz not null default now()
 );
+
+alter table public.hooplab_bookings enable row level security;
+alter table public.hooplab_availability enable row level security;
+
+revoke all on table public.hooplab_bookings from anon, authenticated;
+revoke all on table public.hooplab_availability from anon, authenticated;
 ```
 
 The unique index prevents two players from booking the same individual workout slot. Group sessions can receive multiple bookings; their visible capacity is controlled in `appointments.js`.
 Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`. Staff can accept or refuse player booking requests, and the player receives an email update.
+Because this app talks to Supabase only through server-side Vercel functions using `SUPABASE_SERVICE_ROLE_KEY`, RLS can stay enabled with no public policies on these tables.
+If the tables already exist, run [supabase/secure-hooplab.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/secure-hooplab.sql:1) in the Supabase SQL editor to harden them.
 
 Add these Vercel environment variables:
 

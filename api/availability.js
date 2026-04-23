@@ -1,6 +1,7 @@
 import { isStaffAuthenticated } from './_auth.js';
 import {
   createAvailability,
+  deleteAvailability,
   hasSupabaseConfig,
   listAvailability,
   updateAvailability
@@ -70,6 +71,15 @@ export default async function handler(req, res) {
 
       const slot = await updateAvailability(body.id, updates);
       return res.status(200).json({ slot });
+    }
+
+    if (req.method === 'DELETE') {
+      if (!body.id) {
+        return res.status(400).json({ error: 'Missing slot id.' });
+      }
+
+      await deleteAvailability(body.id);
+      return res.status(200).json({ ok: true });
     }
 
     return res.status(405).json({ error: 'Method not allowed' });

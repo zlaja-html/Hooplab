@@ -179,6 +179,23 @@ export async function updateAvailability(id, updates) {
   return rows[0];
 }
 
+export async function deleteAvailability(id) {
+  const response = await supabaseFetch(AVAILABILITY_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: {
+      Prefer: 'return=representation'
+    }
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase availability delete failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
 async function supabaseFetch(table, query = '', options = {}) {
   if (!hasSupabaseConfig()) {
     throw new Error('Supabase is not configured');
