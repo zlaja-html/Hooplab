@@ -298,6 +298,9 @@ function renderBookings(bookings) {
             <button class="button primary" type="button" data-accept-booking="${escapeHtml(booking.id)}">Accept and email player</button>
             <button class="button danger" type="button" data-refuse-booking="${escapeHtml(booking.id)}">Refuse and email player</button>
           ` : ''}
+          ${status !== 'pending' ? `
+            <button class="button danger" type="button" data-delete-booking="${escapeHtml(booking.id)}">Delete booking</button>
+          ` : ''}
           ${supportsBookingTrainingPlan(booking.program) ? `
             <button class="button secondary light" type="button" data-edit-plan-booking="${escapeHtml(booking.id)}">
               ${plan ? 'Edit training plan' : 'Attach training plan'}
@@ -321,6 +324,10 @@ function renderBookings(bookings) {
 
   list.querySelectorAll('[data-refuse-booking]').forEach(button => {
     button.addEventListener('click', () => refuseBooking(button.dataset.refuseBooking, button));
+  });
+
+  list.querySelectorAll('[data-delete-booking]').forEach(button => {
+    button.addEventListener('click', () => deletePlayerBooking(button.dataset.deleteBooking, button));
   });
 
   list.querySelectorAll('[data-edit-plan-booking]').forEach(button => {
@@ -725,6 +732,38 @@ async function refuseBooking(id, button) {
   } catch {
     button.disabled = false;
     button.textContent = 'Refuse failed';
+  }
+}
+
+async function deletePlayerBooking(id, button) {
+  const confirmed = window.confirm('Delete this booking completely? This cannot be undone.');
+
+  if (!confirmed) {
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = 'Deleting...';
+
+  try {
+    const response = await fetch('/api/bookings', {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      button.disabled = false;
+      button.textContent = result.error || 'Delete failed';
+      return;
+    }
+
+    await Promise.all([loadBookings(), loadTrainingPlans()]);
+  } catch {
+    button.disabled = false;
+    button.textContent = 'Delete failed';
   }
 }
 

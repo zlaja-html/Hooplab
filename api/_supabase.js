@@ -147,6 +147,23 @@ export async function refuseBooking(id) {
   return rows[0];
 }
 
+export async function deleteBooking(id) {
+  const response = await supabaseFetch(BOOKINGS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: {
+      Prefer: 'return=representation'
+    }
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase booking delete failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
 export async function listAvailability({ activeOnly = false } = {}) {
   const fields = [
     'id',
