@@ -74,17 +74,38 @@ create table if not exists hooplab_availability (
   created_at timestamptz not null default now()
 );
 
+create table if not exists public.hooplab_training_plans (
+  id uuid primary key default gen_random_uuid(),
+  booking_id uuid not null references public.hooplab_bookings(id) on delete cascade,
+  program text not null,
+  title text not null,
+  player_overview text not null,
+  player_topics jsonb not null default '[]'::jsonb,
+  prep_notes text,
+  coach_notes text,
+  drills jsonb not null default '[]'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists hooplab_training_plans_booking_key
+on public.hooplab_training_plans (booking_id);
+
 alter table public.hooplab_bookings enable row level security;
 alter table public.hooplab_availability enable row level security;
+alter table public.hooplab_training_plans enable row level security;
 
 revoke all on table public.hooplab_bookings from anon, authenticated;
 revoke all on table public.hooplab_availability from anon, authenticated;
+revoke all on table public.hooplab_training_plans from anon, authenticated;
 ```
 
 The unique index prevents two players from booking the same individual workout slot. Group sessions can receive multiple bookings; their visible capacity is controlled in `appointments.js`.
 Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`. Staff can accept or refuse player booking requests, and the player receives an email update.
+Staff can also build drill-by-drill training plans attached to individual workouts, group sessions, and tryout bookings. Each plan stores a coach-facing session breakdown plus a simpler player-facing overview and topic summary.
 Because this app talks to Supabase only through server-side Vercel functions using `SUPABASE_SERVICE_ROLE_KEY`, RLS can stay enabled with no public policies on these tables.
 If the tables already exist, run [supabase/secure-hooplab.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/secure-hooplab.sql:1) in the Supabase SQL editor to harden them.
+Run [supabase/training-plans.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/training-plans.sql:1) to add the training-plan table used by the staff planner.
 
 Add these Vercel environment variables:
 
@@ -93,6 +114,7 @@ SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 SUPABASE_BOOKINGS_TABLE=hooplab_bookings
 SUPABASE_AVAILABILITY_TABLE=hooplab_availability
+SUPABASE_TRAINING_PLANS_TABLE=hooplab_training_plans
 STAFF_ACCESS_CODE=choose-a-private-staff-code
 STAFF_SESSION_SECRET=choose-a-long-random-secret
 RESEND_API_KEY=your_resend_key

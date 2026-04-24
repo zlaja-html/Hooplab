@@ -1,5 +1,6 @@
 const BOOKINGS_TABLE = process.env.SUPABASE_BOOKINGS_TABLE || 'hooplab_bookings';
 const AVAILABILITY_TABLE = process.env.SUPABASE_AVAILABILITY_TABLE || 'hooplab_availability';
+const TRAINING_PLANS_TABLE = process.env.SUPABASE_TRAINING_PLANS_TABLE || 'hooplab_training_plans';
 
 export function hasSupabaseConfig() {
   return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -53,6 +54,35 @@ export async function listBookings() {
   }
 
   return response.json();
+}
+
+export async function getBooking(id) {
+  const fields = [
+    'id',
+    'program',
+    'appointment',
+    'appointment_date',
+    'appointment_time',
+    'name',
+    'age',
+    'position',
+    'experience',
+    'email',
+    'phone',
+    'status',
+    'accepted_at',
+    'refused_at',
+    'created_at'
+  ].join(',');
+  const response = await supabaseFetch(BOOKINGS_TABLE, `?id=eq.${encodeURIComponent(id)}&select=${fields}&limit=1`);
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase booking lookup failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
 }
 
 export async function listBookingCounts() {
@@ -190,6 +220,89 @@ export async function deleteAvailability(id) {
   if (!response.ok) {
     const details = await response.text();
     throw new Error(`Supabase availability delete failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
+export async function listTrainingPlans() {
+  const fields = [
+    'id',
+    'booking_id',
+    'program',
+    'title',
+    'player_overview',
+    'player_topics',
+    'prep_notes',
+    'coach_notes',
+    'drills',
+    'created_at',
+    'updated_at'
+  ].join(',');
+  const response = await supabaseFetch(
+    TRAINING_PLANS_TABLE,
+    `?select=${fields}&order=updated_at.desc.nullslast&order=created_at.desc`
+  );
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase training-plan list failed: ${response.status} ${details}`);
+  }
+
+  return response.json();
+}
+
+export async function createTrainingPlan(plan) {
+  const response = await supabaseFetch(TRAINING_PLANS_TABLE, '', {
+    method: 'POST',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify(plan)
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase training-plan insert failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+export async function updateTrainingPlan(id, updates) {
+  const response = await supabaseFetch(TRAINING_PLANS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify({
+      ...updates,
+      updated_at: new Date().toISOString()
+    })
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase training-plan update failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+export async function deleteTrainingPlan(id) {
+  const response = await supabaseFetch(TRAINING_PLANS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: {
+      Prefer: 'return=representation'
+    }
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase training-plan delete failed: ${response.status} ${details}`);
   }
 
   const rows = await response.json();

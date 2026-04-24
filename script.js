@@ -401,7 +401,7 @@ const translations = {
 
 const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#site-nav');
-const langToggle = document.getElementById('lang-toggle');
+const langButtons = document.querySelectorAll('[data-language]');
 const form = document.querySelector('#apply-form');
 const metaDescription = document.querySelector('meta[name="description"]');
 const storedLanguage = window.localStorage.getItem('hooplab-language');
@@ -441,10 +441,11 @@ function applyLanguage(language) {
     element.setAttribute('aria-label', t(element.dataset.i18nAriaLabel));
   });
 
-  if (langToggle) {
-    langToggle.textContent = t('locale.toggleButton');
-    langToggle.setAttribute('aria-label', t('locale.toggleAria'));
-  }
+  langButtons.forEach(button => {
+    const isActive = button.dataset.language === language;
+    button.classList.toggle('is-active', isActive);
+    button.setAttribute('aria-pressed', String(isActive));
+  });
 
   if (form) {
     const submitButton = form.querySelector('button[type="submit"]');
@@ -468,8 +469,10 @@ if (menuButton && nav) {
   });
 }
 
-langToggle?.addEventListener('click', () => {
-  applyLanguage(currentLanguage === 'en' ? 'de' : 'en');
+langButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    applyLanguage(button.dataset.language);
+  });
 });
 
 document.querySelectorAll('a[href^="#"]').forEach(link => {

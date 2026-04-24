@@ -106,6 +106,68 @@
         </section>
       </div>
 
+      <div class="staff-layout">
+        <section class="staff-panel">
+          <form class="apply-form staff-plan-form" id="training-plan-form">
+            <div class="plan-form-head">
+              <h3>Build training plan</h3>
+              <button class="button secondary light" type="button" id="reset-training-plan">New plan</button>
+            </div>
+            <input type="hidden" name="id" id="training-plan-id">
+            <label>
+              Attach to booking
+              <select name="booking_id" id="training-plan-booking" required></select>
+            </label>
+            <label>
+              Plan title
+              <input type="text" name="title" id="training-plan-title" placeholder="Shooting balance and rim finishing" required>
+            </label>
+            <label>
+              Player-facing overview
+              <textarea name="player_overview" id="training-plan-overview" rows="4" placeholder="A simple summary you can send to players." required></textarea>
+            </label>
+            <label>
+              Player-facing topics
+              <textarea name="player_topics" id="training-plan-topics" rows="4" placeholder="One selling point per line&#10;Finishing through contact&#10;Weak-hand decision making&#10;Pick-and-roll reads"></textarea>
+            </label>
+            <label>
+              Prep and equipment
+              <textarea name="prep_notes" id="training-plan-prep" rows="3" placeholder="Cones, resistance bands, 2 chairs, film clips ready on iPad"></textarea>
+            </label>
+            <label>
+              Coach notes
+              <textarea name="coach_notes" id="training-plan-coach-notes" rows="4" placeholder="Exact coaching emphasis, teaching points, progressions, and constraints."></textarea>
+            </label>
+
+            <div class="plan-drill-head">
+              <div>
+                <h4>Drills and timing</h4>
+                <p class="section-note">Add each drill with exact duration so the session is ready to coach.</p>
+              </div>
+              <button class="button secondary light" type="button" id="add-drill">Add drill</button>
+            </div>
+
+            <div class="plan-drill-list" id="training-drills"></div>
+
+            <div class="plan-summary">
+              <strong>Total session time</strong>
+              <span id="training-plan-total">0 min</span>
+            </div>
+
+            <div class="booking-actions">
+              <button class="button primary" type="submit">Save training plan</button>
+              <button class="button danger" type="button" id="delete-training-plan" hidden>Delete training plan</button>
+            </div>
+            <p class="form-hint" id="training-plan-hint" role="status"></p>
+          </form>
+        </section>
+
+        <section class="staff-panel">
+          <h3>Saved training plans</h3>
+          <div class="appointment-list compact" id="training-plan-list"></div>
+        </section>
+      </div>
+
       <div class="staff-actions">
         <button class="button secondary light" type="button" id="lock-staff">Lock</button>
       </div>

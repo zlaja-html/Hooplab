@@ -4,7 +4,8 @@ import { sendEmail } from './_email.js';
 import { createBooking, hasSupabaseConfig } from './_supabase.js';
 
 const REQUIRED = ['program', 'name', 'age', 'position', 'experience', 'email', 'phone'];
-const BOOKING_PROGRAMS = new Set(['individual-workouts', 'group-sessions']);
+const BOOKING_PROGRAMS = new Set(['individual-workouts', 'group-sessions', 'tryouts']);
+const APPOINTMENT_PROGRAMS = new Set(['individual-workouts', 'group-sessions']);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -28,7 +29,7 @@ export default async function handler(req, res) {
   }
 
   if (BOOKING_PROGRAMS.has(body.program)) {
-    if (!body.appointment) {
+    if (APPOINTMENT_PROGRAMS.has(body.program) && !body.appointment) {
       return res.status(400).json({ error: 'Appointment is required for this program.' });
     }
 
@@ -37,10 +38,11 @@ export default async function handler(req, res) {
     }
 
     try {
-      const appointment = parseAppointment(body.appointment);
+      const appointmentValue = APPOINTMENT_PROGRAMS.has(body.program) ? body.appointment : 'tryout-request';
+      const appointment = parseAppointment(appointmentValue);
       const booking = await createBooking({
         program: body.program,
-        appointment: body.appointment,
+        appointment: appointmentValue,
         appointment_date: appointment.date,
         appointment_time: appointment.time,
         name: body.name,

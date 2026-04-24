@@ -21,9 +21,14 @@
     </a>
 
     <div class="header-actions">
-      <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch page language to German">
-        DE
-      </button>
+      <div class="lang-toggle-group" aria-label="Language switch">
+        <button class="lang-toggle is-active" type="button" data-language="en" aria-label="Switch page language to English">
+          <span aria-hidden="true">🇺🇸</span>
+        </button>
+        <button class="lang-toggle" type="button" data-language="de" aria-label="Switch page language to German">
+          <span aria-hidden="true">🇩🇪</span>
+        </button>
+      </div>
       <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-i18n="nav.menu">
         Menu
       </button>
@@ -48,12 +53,12 @@
       <img class="hero-image" src="images/Harun%20Coaching%20(9).jpeg" alt="HoopLab coach speaking with players during a basketball session">
       <div class="hero-shade"></div>
       <div class="hero-content">
-        <p class="eyebrow" data-i18n="hero.eyebrow">International basketball development and exposure</p>
-        <h1 data-i18n="hero.title">For players chasing the next level.</h1>
+        <p class="eyebrow">International basketball development and exposure</p>
+        <h1>For players chasing the next level.</h1>
         <p class="hero-copy"></p>
         <div class="hero-actions">
-          <a class="button primary" href="#apply" data-i18n="hero.start">Start application</a>
-          <a class="button secondary" href="#programs" data-i18n="hero.explore">Explore programs</a>
+          <a class="button primary" href="#apply">Start application</a>
+          <a class="button secondary" href="#programs">Explore programs</a>
         </div>
       </div>
     </section>
