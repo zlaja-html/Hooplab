@@ -109,9 +109,11 @@ revoke all on table public.hooplab_training_plans from anon, authenticated;
 The unique index prevents two players from booking the same individual workout slot. Group sessions can receive multiple bookings; their visible capacity is controlled in `appointments.js`.
 Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`. Staff can accept or refuse player booking requests, and the player receives an email update.
 Staff can also build drill-by-drill training plans attached to individual-workout slots, group-session slots, and tryout bookings. Each plan stores a coach-facing session breakdown plus a simpler player-facing overview and topic summary.
+The staff page also includes a shared flyers/posts gallery backed by Supabase, so uploads and removals are visible to every staff member instead of only one browser.
 Because this app talks to Supabase only through server-side Vercel functions using `SUPABASE_SERVICE_ROLE_KEY`, RLS can stay enabled with no public policies on these tables.
 If the tables already exist, run [supabase/secure-hooplab.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/secure-hooplab.sql:1) in the Supabase SQL editor to harden them.
 Run [supabase/training-plans.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/training-plans.sql:1) to add or update the training-plan table used by the staff planner.
+Run [supabase/staff-media.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/staff-media.sql:1) to create the shared staff gallery table and seed the default flyer images.
 
 Add these Vercel environment variables:
 
@@ -121,6 +123,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 SUPABASE_BOOKINGS_TABLE=hooplab_bookings
 SUPABASE_AVAILABILITY_TABLE=hooplab_availability
 SUPABASE_TRAINING_PLANS_TABLE=hooplab_training_plans
+SUPABASE_STAFF_MEDIA_TABLE=hooplab_staff_media
 STAFF_ACCESS_CODE=choose-a-private-staff-code
 STAFF_SESSION_SECRET=choose-a-long-random-secret
 RESEND_API_KEY=your_resend_key

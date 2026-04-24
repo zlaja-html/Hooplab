@@ -24,32 +24,14 @@ const flyerUploadInput = document.getElementById('flyer-upload-input');
 let currentBookings = [];
 let currentAvailability = [];
 let currentTrainingPlans = [];
-const FLYER_UPLOADS_KEY = 'hooplab-staff-flyer-uploads';
-const FLYER_HIDDEN_KEY = 'hooplab-staff-flyer-hidden';
-const defaultFlyers = [
-  {
-    id: 'day1-flyer',
-    title: 'Day 1 flyer',
-    src: 'images/Day1Flyer.png',
-    filename: 'Day1Flyer.png',
-    builtIn: true
-  },
-  {
-    id: 'sponsor-hooplab',
-    title: 'HoopLab sponsor post',
-    src: 'images/sponzor-Hooplab.jpeg',
-    filename: 'sponzor-Hooplab.jpeg',
-    builtIn: true
-  }
-];
+let currentFlyers = [];
 
 async function showDashboard() {
   staffLogin.hidden = true;
   staffDashboard.hidden = false;
   staffHint.textContent = '';
   staffHint.className = 'form-hint';
-  renderFlyers();
-  await Promise.all([loadAvailability(), loadBookings(), loadTrainingPlans()]);
+  await Promise.all([loadAvailability(), loadBookings(), loadTrainingPlans(), loadFlyers()]);
 }
 
 async function loadBookings() {
@@ -128,39 +110,27 @@ async function lockDashboard() {
   staffDashboard.hidden = true;
 }
 
-function readStoredFlyerUploads() {
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(FLYER_UPLOADS_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
+async function loadFlyers() {
+  if (!flyerList) {
+    return;
   }
-}
 
-function writeStoredFlyerUploads(items) {
-  window.localStorage.setItem(FLYER_UPLOADS_KEY, JSON.stringify(items));
-}
+  flyerList.innerHTML = '<p class="form-hint">Loading flyers and posts...</p>';
 
-function readHiddenFlyerIds() {
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(FLYER_HIDDEN_KEY) || '[]');
-    return Array.isArray(parsed) ? parsed : [];
+    const response = await fetch('/api/staff-media', { credentials: 'include' });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      flyerList.innerHTML = `<p class="form-hint error">${escapeHtml(result.error || 'Could not load flyers and posts.')}</p>`;
+      return;
+    }
+
+    currentFlyers = result.media || [];
+    renderFlyers();
   } catch {
-    return [];
+    flyerList.innerHTML = '<p class="form-hint error">Could not load flyers and posts.</p>';
   }
-}
-
-function writeHiddenFlyerIds(ids) {
-  window.localStorage.setItem(FLYER_HIDDEN_KEY, JSON.stringify(ids));
-}
-
-function allFlyers() {
-  return [...defaultFlyers, ...readStoredFlyerUploads()];
-}
-
-function visibleFlyers() {
-  const hidden = new Set(readHiddenFlyerIds());
-  return allFlyers().filter(item => !hidden.has(item.id));
 }
 
 function renderFlyers() {
@@ -168,7 +138,7 @@ function renderFlyers() {
     return;
   }
 
-  const items = visibleFlyers();
+  const items = currentFlyers;
   flyerList.innerHTML = '';
 
   if (!items.length) {
@@ -199,22 +169,7 @@ function renderFlyers() {
 }
 
 function removeFlyerFromPage(id) {
-  const uploads = readStoredFlyerUploads();
-  const uploadExists = uploads.some(item => item.id === id);
-
-  if (uploadExists) {
-    writeStoredFlyerUploads(uploads.filter(item => item.id !== id));
-    flyerHint.className = 'form-hint success';
-    flyerHint.textContent = 'Uploaded image removed from the staff gallery.';
-  } else {
-    const hidden = new Set(readHiddenFlyerIds());
-    hidden.add(id);
-    writeHiddenFlyerIds([...hidden]);
-    flyerHint.className = 'form-hint success';
-    flyerHint.textContent = 'Image removed from the page. The original file is still untouched.';
-  }
-
-  renderFlyers();
+  hideFlyer(id);
 }
 
 function readFileAsDataUrl(file) {
@@ -235,21 +190,60 @@ async function handleFlyerUpload(files) {
   flyerHint.textContent = 'Uploading images...';
 
   try {
-    const uploaded = await Promise.all(files.map(async file => ({
-      id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      title: file.name.replace(/\.[^.]+$/, '').replaceAll(/[-_]+/g, ' '),
-      src: await readFileAsDataUrl(file),
-      filename: file.name,
-      builtIn: false
-    })));
+    for (const file of files) {
+      const src = await readFileAsDataUrl(file);
+      const title = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').trim() || 'Uploaded image';
+      const response = await fetch('/api/staff-media', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          title,
+          src,
+          filename: file.name
+        })
+      });
+      const result = await response.json().catch(() => ({}));
 
-    writeStoredFlyerUploads([...readStoredFlyerUploads(), ...uploaded]);
+      if (!response.ok) {
+        throw new Error(result.error || 'upload-failed');
+      }
+    }
+
     flyerHint.className = 'form-hint success';
-    flyerHint.textContent = `${uploaded.length} image${uploaded.length === 1 ? '' : 's'} added to the staff gallery.`;
-    renderFlyers();
+    flyerHint.textContent = `${files.length} image${files.length === 1 ? '' : 's'} added to the shared staff gallery.`;
+    await loadFlyers();
   } catch {
     flyerHint.className = 'form-hint error';
     flyerHint.textContent = 'Could not add the selected images.';
+  }
+}
+
+async function hideFlyer(id) {
+  flyerHint.className = 'form-hint';
+  flyerHint.textContent = 'Removing image from the page...';
+
+  try {
+    const response = await fetch('/api/staff-media', {
+      method: 'PATCH',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id, hidden: true })
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      flyerHint.className = 'form-hint error';
+      flyerHint.textContent = result.error || 'Could not remove image from the page.';
+      return;
+    }
+
+    flyerHint.className = 'form-hint success';
+    flyerHint.textContent = 'Image removed from the page. The original file stays untouched.';
+    await loadFlyers();
+  } catch {
+    flyerHint.className = 'form-hint error';
+    flyerHint.textContent = 'Could not remove image from the page.';
   }
 }
 
