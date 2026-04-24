@@ -12,29 +12,34 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="#home" aria-label="HoopLab Agency home">
+    <a class="brand" href="#home" aria-label="HoopLab Agency home" data-i18n-aria-label="brand.homeAria">
       <img class="brand-logo" src="images/Hooplablogo-sponzor.svg" alt="">
       <span class="brand-copy">
         <strong>HoopLab</strong>
-        <span>Agency</span>
+        <span data-i18n="brand.tag">Agency</span>
       </span>
     </a>
 
-    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
-      Menu
-    </button>
+    <div class="header-actions">
+      <button class="lang-toggle" id="lang-toggle" type="button" aria-label="Switch page language to German">
+        DE
+      </button>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" data-i18n="nav.menu">
+        Menu
+      </button>
+    </div>
 
     <nav class="site-nav" id="site-nav" aria-label="Primary navigation">
-      <a href="#programs">Programs</a>
-      <a href="#tryouts">Tryouts</a>
-      <a href="#tours">Tours</a>
-      <a href="#workouts">Workouts</a>
-      <a href="#group-sessions">Group Sessions</a>
-      <a href="#team">Team</a>
-      <a href="#story">Story</a>
-      <a href="#contact">Contact</a>
-      <a href="employee-appointments.html">Staff</a>
-      <a class="nav-cta" href="#apply">Apply</a>
+      <a href="#programs" data-i18n="nav.programs">Programs</a>
+      <a href="#tryouts" data-i18n="nav.tryouts">Tryouts</a>
+      <a href="#tours" data-i18n="nav.tours">Tours</a>
+      <a href="#workouts" data-i18n="nav.workouts">Workouts</a>
+      <a href="#group-sessions" data-i18n="nav.groupSessions">Group Sessions</a>
+      <a href="#team" data-i18n="nav.team">Team</a>
+      <a href="#story" data-i18n="nav.story">Story</a>
+      <a href="#contact" data-i18n="nav.contact">Contact</a>
+      <a href="employee-appointments.html" data-i18n="nav.staff">Staff</a>
+      <a class="nav-cta" href="#apply" data-i18n="nav.apply">Apply</a>
     </nav>
   </header>
 
@@ -43,38 +48,36 @@
       <img class="hero-image" src="images/Harun%20Coaching%20(9).jpeg" alt="HoopLab coach speaking with players during a basketball session">
       <div class="hero-shade"></div>
       <div class="hero-content">
-        <p class="eyebrow">International basketball development and exposure</p>
-        <h1>For players chasing the next level.</h1>
-        <p class="hero-copy">
-          
-        </p>
+        <p class="eyebrow" data-i18n="hero.eyebrow">International basketball development and exposure</p>
+        <h1 data-i18n="hero.title">For players chasing the next level.</h1>
+        <p class="hero-copy"></p>
         <div class="hero-actions">
-          <a class="button primary" href="#apply">Start application</a>
-          <a class="button secondary" href="#programs">Explore programs</a>
+          <a class="button primary" href="#apply" data-i18n="hero.start">Start application</a>
+          <a class="button secondary" href="#programs" data-i18n="hero.explore">Explore programs</a>
         </div>
       </div>
     </section>
 
     <section class="metrics" aria-label="HoopLab standards">
       <article>
-        <strong>Tryout</strong>
-        <span>Elite 3-day tryout designed to test your skills in real game situations. Compete, perform, and get evaluated by experienced coaches.</span>
+        <strong data-i18n="metrics.tryoutTitle">Tryout</strong>
+        <span data-i18n="metrics.tryoutBody">Elite 3-day tryout designed to test your skills in real game situations. Compete, perform, and get evaluated by experienced coaches.</span>
       </article>
       <article>
-        <strong>Perform</strong>
-        <span>Top performers earn opportunities for teams, tours, and next-level exposure. Your performance decides your path.</span>
+        <strong data-i18n="metrics.performTitle">Perform</strong>
+        <span data-i18n="metrics.performBody">Top performers earn opportunities for teams, tours, and next-level exposure. Your performance decides your path.</span>
       </article>
       <article>
-        <strong>Compete</strong>
-        <span>Compete across Europe and showcase your talent in front of real teams. Gain experience, visibility, and international exposure.</span>
+        <strong data-i18n="metrics.competeTitle">Compete</strong>
+        <span data-i18n="metrics.competeBody">Compete across Europe and showcase your talent in front of real teams. Gain experience, visibility, and international exposure.</span>
       </article>
     </section>
 
     <section id="programs" class="section split">
       <div class="section-copy">
-        <p class="eyebrow">Programs</p>
-        <h2>Built for players who are ready to be evaluated.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="programs.eyebrow">Programs</p>
+        <h2 data-i18n="programs.title">Built for players who are ready to be evaluated.</h2>
+        <p data-i18n="programs.body">
           HoopLab works with athletes who want structure, accountability, and honest
           feedback. Each program is connected to a clear next step: development,
           exposure, selection, or market positioning.
@@ -84,27 +87,27 @@
       <div class="program-grid">
         <article class="program-card">
           <span>01</span>
-          <h3>International Tryouts</h3>
-          <p>Limited-roster evaluation events with coaching, controlled competition, and direct performance review.</p>
-          <a href="#tryouts">Tryout details</a>
+          <h3 data-i18n="programs.card1Title">International Tryouts</h3>
+          <p data-i18n="programs.card1Body">Limited-roster evaluation events with coaching, controlled competition, and direct performance review.</p>
+          <a href="#tryouts" data-i18n="programs.card1Link">Tryout details</a>
         </article>
         <article class="program-card">
           <span>02</span>
-          <h3>Competitive Tours</h3>
-          <p>Tryouts are the scouting step. Selected players are invited into tours after they prove they are ready.</p>
-          <a href="#tours">Tour pathway</a>
+          <h3 data-i18n="programs.card2Title">Competitive Tours</h3>
+          <p data-i18n="programs.card2Body">Tryouts are the scouting step. Selected players are invited into tours after they prove they are ready.</p>
+          <a href="#tours" data-i18n="programs.card2Link">Tour pathway</a>
         </article>
         <article class="program-card">
           <span>03</span>
-          <h3>Individual Workouts</h3>
-          <p>Position-specific development focused on game-speed reads, footwork, finishing, and shot creation.</p>
-          <a href="#apply">Book workouts</a>
+          <h3 data-i18n="programs.card3Title">Individual Workouts</h3>
+          <p data-i18n="programs.card3Body">Position-specific development focused on game-speed reads, footwork, finishing, and shot creation.</p>
+          <a href="#apply" data-i18n="programs.card3Link">Book workouts</a>
         </article>
         <article class="program-card">
           <span>04</span>
-          <h3>Group Sessions</h3>
-          <p>Monthly small-group development sessions for players who want competitive reps and direct coaching.</p>
-          <a href="#group-sessions">Session details</a>
+          <h3 data-i18n="programs.card4Title">Group Sessions</h3>
+          <p data-i18n="programs.card4Body">Monthly small-group development sessions for players who want competitive reps and direct coaching.</p>
+          <a href="#group-sessions" data-i18n="programs.card4Link">Session details</a>
         </article>
       </div>
     </section>
@@ -114,19 +117,19 @@
         <img src="images/Harun%20Coaching%20(3).jpeg" alt="HoopLab coach leading a basketball evaluation session">
       </div>
       <div class="tryout-copy">
-        <p class="eyebrow">Tryouts</p>
-        <h2>Evaluation that reflects the real game.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="tryouts.eyebrow">Tryouts</p>
+        <h2 data-i18n="tryouts.title">Evaluation that reflects the real game.</h2>
+        <p data-i18n="tryouts.body">
           Selection is based on consistency, decision-making, effort, coachability, and
           performance under pressure. Tryouts are how HoopLab scouts players for future tours.
         </p>
         <ul class="check-list">
-          <li>Three-day format with limited roster spots</li>
-          <li>Skill work, competitive drills, and controlled scrimmages</li>
-          <li>Feedback from coaches, scouts, and player-development staff</li>
-          <li>Selected players can be invited to join HoopLab tour rosters</li>
+          <li data-i18n="tryouts.item1">Three-day format with limited roster spots</li>
+          <li data-i18n="tryouts.item2">Skill work, competitive drills, and controlled scrimmages</li>
+          <li data-i18n="tryouts.item3">Feedback from coaches, scouts, and player-development staff</li>
+          <li data-i18n="tryouts.item4">Selected players can be invited to join HoopLab tour rosters</li>
         </ul>
-        <a class="button primary" href="#apply">Apply for tryouts</a>
+        <a class="button primary" href="#apply" data-i18n="tryouts.cta">Apply for tryouts</a>
       </div>
     </section>
 
@@ -135,20 +138,20 @@
         <img src="images/Xavier%20Special%20Picture.jpeg" alt="HoopLab player during a professional basketball opportunity">
       </div>
       <div class="feature-copy">
-        <p class="eyebrow">Tours</p>
-        <h2>Tours are earned through the tryout process.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="tours.eyebrow">Tours</p>
+        <h2 data-i18n="tours.title">Tours are earned through the tryout process.</h2>
+        <p data-i18n="tours.body">
           Players do not apply directly for tours as a shortcut. The tryout is the scouting
           stage, and HoopLab uses it to identify players who can represent the group in real
           club environments.
         </p>
         <ul class="check-list">
-          <li>Tryouts help us scout players for tour selection</li>
-          <li>Selected players compete against club and semi-professional teams</li>
-          <li>Tour rosters are built around role fit, attitude, and performance</li>
-          <li>Game film and exposure are used to support market positioning</li>
+          <li data-i18n="tours.item1">Tryouts help us scout players for tour selection</li>
+          <li data-i18n="tours.item2">Selected players compete against club and semi-professional teams</li>
+          <li data-i18n="tours.item3">Tour rosters are built around role fit, attitude, and performance</li>
+          <li data-i18n="tours.item4">Game film and exposure are used to support market positioning</li>
         </ul>
-        <a class="button primary" href="#apply">Apply for tryouts</a>
+        <a class="button primary" href="#apply" data-i18n="tours.cta">Apply for tryouts</a>
       </div>
     </section>
 
@@ -157,19 +160,19 @@
         <img src="images/Harun%20Coaching%20(9).jpeg" alt="HoopLab individual basketball training">
       </div>
       <div class="feature-copy">
-        <p class="eyebrow">Individual workouts</p>
-        <h2>Book focused development time with HoopLab.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="workouts.eyebrow">Individual workouts</p>
+        <h2 data-i18n="workouts.title">Book focused development time with HoopLab.</h2>
+        <p data-i18n="workouts.body">
           Individual workouts are for players who want direct coaching, sharper habits,
           and training that translates into live games and future tryout performance.
         </p>
         <ul class="check-list">
-          <li>Position-specific skill development and decision-making</li>
-          <li>Game-speed finishing, footwork, shot creation, and reads</li>
-          <li>Small-group or one-on-one sessions depending on availability</li>
-          <li>Built-in appointment booking for available workout times</li>
+          <li data-i18n="workouts.item1">Position-specific skill development and decision-making</li>
+          <li data-i18n="workouts.item2">Game-speed finishing, footwork, shot creation, and reads</li>
+          <li data-i18n="workouts.item3">Small-group or one-on-one sessions depending on availability</li>
+          <li data-i18n="workouts.item4">Built-in appointment booking for available workout times</li>
         </ul>
-        <a class="button primary" href="#apply" data-program="individual-workouts">Book a workout</a>
+        <a class="button primary" href="#apply" data-program="individual-workouts" data-i18n="workouts.cta">Book a workout</a>
       </div>
     </section>
 
@@ -178,27 +181,27 @@
         <img src="images/Harun%20Coaching%20(1).jpeg" alt="HoopLab group basketball training session">
       </div>
       <div class="feature-copy">
-        <p class="eyebrow">Group sessions</p>
-        <h2>Train in a competitive group setting.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="group.eyebrow">Group sessions</p>
+        <h2 data-i18n="group.title">Train in a competitive group setting.</h2>
+        <p data-i18n="group.body">
           Group sessions are built for players who want game-speed reps, accountability,
           and direct coaching in a small-group environment. Sessions run once or twice a
           month based on gym availability and roster demand.
         </p>
         <ul class="check-list">
-          <li>Small-group skill work with competitive live reps</li>
-          <li>Decision-making, spacing, finishing, and shot creation</li>
-          <li>Session dates are posted individually, not as a weekly schedule</li>
-          <li>Players book available monthly dates through the application form</li>
+          <li data-i18n="group.item1">Small-group skill work with competitive live reps</li>
+          <li data-i18n="group.item2">Decision-making, spacing, finishing, and shot creation</li>
+          <li data-i18n="group.item3">Session dates are posted individually, not as a weekly schedule</li>
+          <li data-i18n="group.item4">Players book available monthly dates through the application form</li>
         </ul>
-        <a class="button primary" href="#apply" data-program="group-sessions">Book a group session</a>
+        <a class="button primary" href="#apply" data-program="group-sessions" data-i18n="group.cta">Book a group session</a>
       </div>
     </section>
 
     <section id="team" class="section">
       <div class="section-heading">
-        <p class="eyebrow">Team</p>
-        <h2>Coaching, scouting, and player development in one room.</h2>
+        <p class="eyebrow" data-i18n="team.eyebrow">Team</p>
+        <h2 data-i18n="team.title">Coaching, scouting, and player development in one room.</h2>
       </div>
 
       <div class="team-grid">
@@ -206,21 +209,21 @@
           <img src="images/Coach%20Harun.jpeg" alt="Harun Subasic">
           <div>
             <h3>Harun Subasic</h3>
-            <p>Coach</p>
+            <p data-i18n="team.harunRole">Coach</p>
           </div>
         </article>
         <article class="person-card">
           <img src="images/zlatan%20special%20picture.jpeg" alt="Zlatan Besirevic">
           <div>
             <h3>Zlatan Besirevic</h3>
-            <p>Scout, Trainer</p>
+            <p data-i18n="team.zlatanRole">Scout, Trainer</p>
           </div>
         </article>
         <article class="person-card">
           <img src="images/Xavier%20Boyd.jpeg" alt="Xavier Boyd">
           <div>
             <h3>Xavier Boyd</h3>
-            <p>Scout, Pro Player</p>
+            <p data-i18n="team.xavierRole">Scout, Pro Player</p>
           </div>
         </article>
       </div>
@@ -231,35 +234,35 @@
         <img src="images/Xavier%20in-Game.jpeg" alt="Xavier Boyd competing during a basketball game">
       </div>
       <article class="story-copy">
-        <p class="eyebrow">Player success story</p>
-        <h2>Xavier Boyd used the pathway to move up.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="story.eyebrow">Player success story</p>
+        <h2 data-i18n="story.title">Xavier Boyd used the pathway to move up.</h2>
+        <p data-i18n="story.body1">
           After arriving in Germany, Xavier joined the Boeblingen Panthers and used that
           platform to adapt, earn minutes, and prove his value in a structured club environment.
         </p>
-        <p>
+        <p data-i18n="story.body2">
           With consistent performance, targeted exposure, and active communication in the
           German basketball market, interest from higher-level clubs followed. After half a
           season, Xavier secured a move to Kirchheim, a Regional League program.
         </p>
-        <strong>We do not promise shortcuts. We build pathways.</strong>
+        <strong data-i18n="story.quote">We do not promise shortcuts. We build pathways.</strong>
       </article>
     </section>
 
     <section id="apply" class="section apply-section">
       <div class="apply-copy">
-        <p class="eyebrow">Apply</p>
-        <h2>Send your player profile.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="apply.eyebrow">Apply</p>
+        <h2 data-i18n="apply.title">Send your player profile.</h2>
+        <p data-i18n="apply.body">
           Choose the right program and share your playing background. Every application is
           reviewed by the HoopLab team.
         </p>
         <div class="contact-strip">
-          <span>Tryouts</span>
-          <span>Tours</span>
-          <span>Workouts</span>
-          <span>Group Sessions</span>
-          <span>Consultation</span>
+          <span data-i18n="apply.tag1">Tryouts</span>
+          <span data-i18n="apply.tag2">Tours</span>
+          <span data-i18n="apply.tag3">Workouts</span>
+          <span data-i18n="apply.tag4">Group Sessions</span>
+          <span data-i18n="apply.tag5">Consultation</span>
         </div>
       </div>
 
@@ -267,78 +270,78 @@
         <input type="text" name="extra_field" class="honeypot" tabindex="-1" autocomplete="off">
 
         <label>
-          Program
+          <span data-i18n="form.programLabel">Program</span>
           <select name="program" required>
-            <option value="">Select application type</option>
-            <option value="tryouts">Tryouts</option>
-            <option value="individual-workouts">Individual Workouts</option>
-            <option value="group-sessions">Group Sessions</option>
-            <option value="consultation">Consultation</option>
+            <option value="" data-i18n="form.programPlaceholder">Select application type</option>
+            <option value="tryouts" data-i18n="form.programTryouts">Tryouts</option>
+            <option value="individual-workouts" data-i18n="form.programWorkouts">Individual Workouts</option>
+            <option value="group-sessions" data-i18n="form.programGroups">Group Sessions</option>
+            <option value="consultation" data-i18n="form.programConsultation">Consultation</option>
           </select>
         </label>
 
         <section class="scheduler" id="workout-scheduler" hidden>
           <div>
-            <p class="eyebrow">Workout calendar</p>
-            <h3>Choose an available appointment.</h3>
-            <p class="scheduler-note">
+            <p class="eyebrow" data-i18n="workoutScheduler.eyebrow">Workout calendar</p>
+            <h3 data-i18n="workoutScheduler.title">Choose an available appointment.</h3>
+            <p class="scheduler-note" data-i18n="workoutScheduler.body">
               Select one available slot. HoopLab will receive your booking with the application.
             </p>
           </div>
           <input type="hidden" name="appointment" id="appointment-input">
           <div class="calendar-shell" id="calendar-shell" aria-label="Available workout appointments"></div>
-          <p class="form-hint" id="appointment-hint">No appointment selected.</p>
+          <p class="form-hint" id="appointment-hint" data-i18n="workoutScheduler.hint">No appointment selected.</p>
         </section>
 
         <section class="scheduler" id="group-scheduler" hidden>
           <div>
-            <p class="eyebrow">Group session calendar</p>
-            <h3>Choose an available group session.</h3>
-            <p class="scheduler-note">
+            <p class="eyebrow" data-i18n="groupScheduler.eyebrow">Group session calendar</p>
+            <h3 data-i18n="groupScheduler.title">Choose an available group session.</h3>
+            <p class="scheduler-note" data-i18n="groupScheduler.body">
               Group sessions are scheduled once or twice per month. Select one posted date.
             </p>
           </div>
           <input type="hidden" name="group_appointment" id="group-appointment-input">
           <div class="calendar-shell" id="group-calendar-shell" aria-label="Available group session appointments"></div>
-          <p class="form-hint" id="group-appointment-hint">No group session selected.</p>
+          <p class="form-hint" id="group-appointment-hint" data-i18n="groupScheduler.hint">No group session selected.</p>
         </section>
 
         <div class="form-row">
           <label>
-            Name
-            <input type="text" name="name" placeholder="Your name" autocomplete="name" required>
+            <span data-i18n="form.nameLabel">Name</span>
+            <input type="text" name="name" placeholder="Your name" autocomplete="name" required data-i18n-placeholder="form.namePlaceholder">
           </label>
 
           <label>
-            Age
-            <input type="number" name="age" min="14" max="40" placeholder="18" required>
+            <span data-i18n="form.ageLabel">Age</span>
+            <input type="number" name="age" min="14" max="40" placeholder="18" required data-i18n-placeholder="form.agePlaceholder">
           </label>
         </div>
 
         <label>
-          Position
-          <input type="text" name="position" placeholder="Guard / Wing / Forward / Center" required>
+          <span data-i18n="form.positionLabel">Position</span>
+          <input type="text" name="position" placeholder="Guard / Wing / Forward / Center" required data-i18n-placeholder="form.positionPlaceholder">
         </label>
 
         <label>
-          Playing experience
-          <textarea name="experience" rows="4" placeholder="Teams, leagues, countries, years played" required></textarea>
+          <span data-i18n="form.experienceLabel">Playing experience</span>
+          <textarea name="experience" rows="4" placeholder="Teams, leagues, countries, years played" required data-i18n-placeholder="form.experiencePlaceholder"></textarea>
         </label>
 
         <div class="form-row">
           <label>
-            Email
-            <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+            <span data-i18n="form.emailLabel">Email</span>
+            <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required data-i18n-placeholder="form.emailPlaceholder">
           </label>
 
           <label>
-            Phone / WhatsApp
-            <input type="tel" name="phone" placeholder="+1 555 555 5555" autocomplete="tel" required>
+            <span data-i18n="form.phoneLabel">Phone / WhatsApp</span>
+            <input type="tel" name="phone" placeholder="+1 555 555 5555" autocomplete="tel" required data-i18n-placeholder="form.phonePlaceholder">
           </label>
         </div>
 
-        <button type="submit" class="button primary full">Submit application</button>
-        <p class="form-hint" id="form-hint" role="status">
+        <button type="submit" class="button primary full" data-i18n="form.submit">Submit application</button>
+        <p class="form-hint" id="form-hint" role="status" data-i18n="form.hint">
           Selection remains performance-based and opportunity-specific.
         </p>
       </form>
@@ -346,32 +349,32 @@
 
     <section id="contact" class="section legal-section">
       <article>
-        <p class="eyebrow">Contact</p>
-        <h2>Contact HoopLab.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="contact.eyebrow">Contact</p>
+        <h2 data-i18n="contact.title">Contact HoopLab.</h2>
+        <p data-i18n="contact.body">
           For applications, bookings, partner requests, and player questions, contact the
           HoopLab team directly.
         </p>
-        <p><strong>Email:</strong> <a href="mailto:contact@hooplab-agency.com">contact@hooplab-agency.com</a></p>
+        <p><strong data-i18n="contact.emailLabel">Email:</strong> <a href="mailto:contact@hooplab-agency.com">contact@hooplab-agency.com</a></p>
       </article>
       <article>
-        <p class="eyebrow">Privacy</p>
-        <h2>Privacy notice.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="privacy.eyebrow">Privacy</p>
+        <h2 data-i18n="privacy.title">Privacy notice.</h2>
+        <p data-i18n="privacy.body1">
           Application data is used only to review player profiles, manage bookings, contact
           applicants, and operate HoopLab programs. Submitted details may include name, age,
           position, playing experience, email, phone number, selected program, and appointment
           time.
         </p>
-        <p>
+        <p data-i18n-html="privacy.body2">
           To request correction or deletion of your data, email
           <a href="mailto:contact@hooplab-agency.com">contact@hooplab-agency.com</a>.
         </p>
       </article>
       <article>
-        <p class="eyebrow">Imprint</p>
-        <h2>Legal information.</h2>
-        <p>
+        <p class="eyebrow" data-i18n="imprint.eyebrow">Imprint</p>
+        <h2 data-i18n="imprint.title">Legal information.</h2>
+        <p data-i18n-html="imprint.body">
           HoopLab Agency<br>
           Schloßberg 3<br>
           71032 Böblingen<br>
@@ -383,8 +386,8 @@
 
     <section class="sponsor-section" aria-labelledby="sponsor-heading">
       <div>
-        <p class="eyebrow">Powered by</p>
-        <h2 id="sponsor-heading">Our partners.</h2>
+        <p class="eyebrow" data-i18n="sponsors.eyebrow">Powered by</p>
+        <h2 id="sponsor-heading" data-i18n="sponsors.title">Our partners.</h2>
       </div>
       <div class="sponsor-strip" aria-label="Sponsor logos">
         <img src="images/BoBar-sponzor.jpeg" alt="BoBar">
@@ -396,25 +399,25 @@
   </main>
 
   <footer class="footer">
-    <a class="brand" href="#home" aria-label="HoopLab Agency home">
+    <a class="brand" href="#home" aria-label="HoopLab Agency home" data-i18n-aria-label="brand.homeAria">
       <img class="brand-logo" src="images/Hooplablogo-sponzor.svg" alt="">
       <span class="brand-copy">
         <strong>HoopLab</strong>
-        <span>Agency</span>
+        <span data-i18n="brand.tag">Agency</span>
       </span>
     </a>
     <nav aria-label="Footer navigation">
-      <a href="#programs">Programs</a>
-      <a href="#tryouts">Tryouts</a>
-      <a href="#tours">Tours</a>
-      <a href="#workouts">Workouts</a>
-      <a href="#group-sessions">Group Sessions</a>
-      <a href="#team">Team</a>
-      <a href="#contact">Contact</a>
-      <a href="#apply">Apply</a>
-      <a href="employee-appointments.html">Staff appointments</a>
+      <a href="#programs" data-i18n="footer.programs">Programs</a>
+      <a href="#tryouts" data-i18n="footer.tryouts">Tryouts</a>
+      <a href="#tours" data-i18n="footer.tours">Tours</a>
+      <a href="#workouts" data-i18n="footer.workouts">Workouts</a>
+      <a href="#group-sessions" data-i18n="footer.groupSessions">Group Sessions</a>
+      <a href="#team" data-i18n="footer.team">Team</a>
+      <a href="#contact" data-i18n="footer.contact">Contact</a>
+      <a href="#apply" data-i18n="footer.apply">Apply</a>
+      <a href="employee-appointments.html" data-i18n="footer.staffAppointments">Staff appointments</a>
     </nav>
-    <p>International Basketball Development and Exposure</p>
+    <p data-i18n="footer.tagline">International Basketball Development and Exposure</p>
   </footer>
 
   <script src="appointments.js"></script>

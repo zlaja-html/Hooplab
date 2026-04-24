@@ -108,6 +108,12 @@ a {
   font-weight: 700;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
@@ -115,6 +121,7 @@ a {
 }
 
 .site-nav a,
+.lang-toggle,
 .menu-toggle {
   border-radius: 8px;
   padding: 10px 12px;
@@ -124,8 +131,16 @@ a {
 }
 
 .site-nav a:hover,
+.lang-toggle:hover,
 .menu-toggle:hover {
   background: #eef2f7;
+}
+
+.lang-toggle {
+  border: 1px solid var(--line);
+  background: linear-gradient(180deg, #fff, #f4f8fd);
+  font: inherit;
+  cursor: pointer;
 }
 
 .site-nav .nav-cta {
@@ -972,6 +987,10 @@ textarea {
 @media (max-width: 760px) {
   .site-header {
     min-height: 68px;
+  }
+
+  .header-actions {
+    margin-left: auto;
   }
 
   .menu-toggle {
