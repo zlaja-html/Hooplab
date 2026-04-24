@@ -17,15 +17,38 @@ const addDrillButton = document.getElementById('add-drill');
 const resetTrainingPlanButton = document.getElementById('reset-training-plan');
 const deleteTrainingPlanButton = document.getElementById('delete-training-plan');
 const logoutButton = document.getElementById('lock-staff');
+const flyerList = document.getElementById('flyer-list');
+const flyerHint = document.getElementById('flyer-hint');
+const uploadFlyerButton = document.getElementById('upload-flyer');
+const flyerUploadInput = document.getElementById('flyer-upload-input');
 let currentBookings = [];
 let currentAvailability = [];
 let currentTrainingPlans = [];
+const FLYER_UPLOADS_KEY = 'hooplab-staff-flyer-uploads';
+const FLYER_HIDDEN_KEY = 'hooplab-staff-flyer-hidden';
+const defaultFlyers = [
+  {
+    id: 'day1-flyer',
+    title: 'Day 1 flyer',
+    src: 'images/Day1Flyer.png',
+    filename: 'Day1Flyer.png',
+    builtIn: true
+  },
+  {
+    id: 'sponsor-hooplab',
+    title: 'HoopLab sponsor post',
+    src: 'images/sponzor-Hooplab.jpeg',
+    filename: 'sponzor-Hooplab.jpeg',
+    builtIn: true
+  }
+];
 
 async function showDashboard() {
   staffLogin.hidden = true;
   staffDashboard.hidden = false;
   staffHint.textContent = '';
   staffHint.className = 'form-hint';
+  renderFlyers();
   await Promise.all([loadAvailability(), loadBookings(), loadTrainingPlans()]);
 }
 
@@ -103,6 +126,131 @@ async function lockDashboard() {
 
   staffLogin.hidden = false;
   staffDashboard.hidden = true;
+}
+
+function readStoredFlyerUploads() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(FLYER_UPLOADS_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeStoredFlyerUploads(items) {
+  window.localStorage.setItem(FLYER_UPLOADS_KEY, JSON.stringify(items));
+}
+
+function readHiddenFlyerIds() {
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(FLYER_HIDDEN_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeHiddenFlyerIds(ids) {
+  window.localStorage.setItem(FLYER_HIDDEN_KEY, JSON.stringify(ids));
+}
+
+function allFlyers() {
+  return [...defaultFlyers, ...readStoredFlyerUploads()];
+}
+
+function visibleFlyers() {
+  const hidden = new Set(readHiddenFlyerIds());
+  return allFlyers().filter(item => !hidden.has(item.id));
+}
+
+function renderFlyers() {
+  if (!flyerList) {
+    return;
+  }
+
+  const items = visibleFlyers();
+  flyerList.innerHTML = '';
+
+  if (!items.length) {
+    flyerList.innerHTML = '<p class="form-hint">No flyers or posts are currently shown.</p>';
+    return;
+  }
+
+  items.forEach(item => {
+    const card = document.createElement('article');
+    card.className = 'flyer-card';
+    card.innerHTML = `
+      <div class="flyer-media">
+        <img src="${escapeHtml(item.src)}" alt="${escapeHtml(item.title)}" loading="lazy">
+      </div>
+      <strong>${escapeHtml(item.title)}</strong>
+      <span>${escapeHtml(item.filename || item.title)}</span>
+      <div class="booking-actions">
+        <a class="button secondary light" href="${escapeHtml(item.src)}" download="${escapeHtml(item.filename || item.title)}">Download</a>
+        <button class="button danger" type="button" data-delete-flyer="${escapeHtml(item.id)}">Remove from page</button>
+      </div>
+    `;
+    flyerList.append(card);
+  });
+
+  flyerList.querySelectorAll('[data-delete-flyer]').forEach(button => {
+    button.addEventListener('click', () => removeFlyerFromPage(button.dataset.deleteFlyer));
+  });
+}
+
+function removeFlyerFromPage(id) {
+  const uploads = readStoredFlyerUploads();
+  const uploadExists = uploads.some(item => item.id === id);
+
+  if (uploadExists) {
+    writeStoredFlyerUploads(uploads.filter(item => item.id !== id));
+    flyerHint.className = 'form-hint success';
+    flyerHint.textContent = 'Uploaded image removed from the staff gallery.';
+  } else {
+    const hidden = new Set(readHiddenFlyerIds());
+    hidden.add(id);
+    writeHiddenFlyerIds([...hidden]);
+    flyerHint.className = 'form-hint success';
+    flyerHint.textContent = 'Image removed from the page. The original file is still untouched.';
+  }
+
+  renderFlyers();
+}
+
+function readFileAsDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('read-failed'));
+    reader.readAsDataURL(file);
+  });
+}
+
+async function handleFlyerUpload(files) {
+  if (!files.length) {
+    return;
+  }
+
+  flyerHint.className = 'form-hint';
+  flyerHint.textContent = 'Uploading images...';
+
+  try {
+    const uploaded = await Promise.all(files.map(async file => ({
+      id: `upload-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      title: file.name.replace(/\.[^.]+$/, '').replaceAll(/[-_]+/g, ' '),
+      src: await readFileAsDataUrl(file),
+      filename: file.name,
+      builtIn: false
+    })));
+
+    writeStoredFlyerUploads([...readStoredFlyerUploads(), ...uploaded]);
+    flyerHint.className = 'form-hint success';
+    flyerHint.textContent = `${uploaded.length} image${uploaded.length === 1 ? '' : 's'} added to the staff gallery.`;
+    renderFlyers();
+  } catch {
+    flyerHint.className = 'form-hint error';
+    flyerHint.textContent = 'Could not add the selected images.';
+  }
 }
 
 function renderBookings(bookings) {
@@ -775,6 +923,16 @@ function escapeHtml(value) {
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#039;');
 }
+
+uploadFlyerButton?.addEventListener('click', () => {
+  flyerUploadInput?.click();
+});
+
+flyerUploadInput?.addEventListener('change', async event => {
+  const files = [...(event.target.files || [])];
+  await handleFlyerUpload(files);
+  flyerUploadInput.value = '';
+});
 
 staffForm?.addEventListener('submit', async event => {
   event.preventDefault();

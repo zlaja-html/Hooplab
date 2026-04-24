@@ -176,17 +176,18 @@
       </section>
 
       <section class="staff-panel flyers-panel">
-        <h3>Flyers and posts</h3>
-        <div class="flyer-grid">
-          <article class="flyer-card">
-            <img src="images/Day1Flyer.png" alt="Day 1 flyer">
-            <span>Day 1 flyer</span>
-          </article>
-          <article class="flyer-card">
-            <img src="images/sponzor-Hooplab.jpeg" alt="HoopLab sponsor post">
-            <span>HoopLab sponsor post</span>
-          </article>
+        <div class="flyers-head">
+          <div>
+            <h3>Flyers and posts</h3>
+            <p class="section-note">Download existing assets, add more images, or hide any item from this staff view.</p>
+          </div>
+          <div class="flyer-actions">
+            <input type="file" id="flyer-upload-input" accept="image/*" multiple hidden>
+            <button class="button secondary light" type="button" id="upload-flyer">Upload images</button>
+          </div>
         </div>
+        <p class="form-hint" id="flyer-hint" role="status"></p>
+        <div class="flyer-grid" id="flyer-list"></div>
       </section>
     </section>
   </main>
