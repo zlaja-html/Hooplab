@@ -2,13 +2,15 @@ import { isStaffAuthenticated } from './_auth.js';
 import {
   createTrainingPlan,
   deleteTrainingPlan,
+  getAvailability,
   getBooking,
   hasSupabaseConfig,
   listTrainingPlans,
   updateTrainingPlan
 } from './_supabase.js';
 
-const ALLOWED_PROGRAMS = new Set(['individual-workouts', 'group-sessions', 'tryouts']);
+const SLOT_PROGRAMS = new Set(['individual-workouts', 'group-sessions']);
+const BOOKING_PROGRAMS = new Set(['tryouts']);
 
 export default async function handler(req, res) {
   if (!hasSupabaseConfig()) {
@@ -34,7 +36,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: validation.error });
       }
 
-      const payload = buildPlanPayload(validation.booking, body);
+      const payload = buildPlanPayload(validation.target, body);
       const plan = body.id
         ? await updateTrainingPlan(body.id, payload)
         : await createTrainingPlan(payload);
@@ -59,18 +61,40 @@ export default async function handler(req, res) {
 }
 
 async function validatePlanPayload(body) {
-  if (!body.booking_id) {
-    return { error: 'Choose a booking first.' };
+  if (!body.target) {
+    return { error: 'Choose a workout, session, or tryout first.' };
   }
 
-  const booking = await getBooking(body.booking_id);
+  const [targetType, rawId] = String(body.target).split(':');
 
-  if (!booking) {
-    return { error: 'Selected booking could not be found.' };
+  if (!rawId) {
+    return { error: 'Selected target could not be found.' };
   }
 
-  if (!ALLOWED_PROGRAMS.has(booking.program)) {
-    return { error: 'Training plans only support individual workouts, group sessions, and tryouts.' };
+  let target = null;
+
+  if (targetType === 'availability') {
+    target = await getAvailability(rawId);
+
+    if (!target) {
+      return { error: 'Selected appointment slot could not be found.' };
+    }
+
+    if (!SLOT_PROGRAMS.has(target.program)) {
+      return { error: 'Training plans only support individual workouts and group sessions for appointment slots.' };
+    }
+  } else if (targetType === 'booking') {
+    target = await getBooking(rawId);
+
+    if (!target) {
+      return { error: 'Selected tryout request could not be found.' };
+    }
+
+    if (!BOOKING_PROGRAMS.has(target.program)) {
+      return { error: 'Only tryout requests can be attached from the booking list.' };
+    }
+  } else {
+    return { error: 'Selected target could not be found.' };
   }
 
   if (!body.title) {
@@ -95,10 +119,10 @@ async function validatePlanPayload(body) {
     return { error: 'Add at least one drill with a duration.' };
   }
 
-  return { booking };
+  return { target: { ...target, targetType } };
 }
 
-function buildPlanPayload(booking, body) {
+function buildPlanPayload(target, body) {
   const drills = (Array.isArray(body.drills) ? body.drills : [])
     .map(drill => ({
       title: String(drill?.title || '').trim(),
@@ -114,8 +138,9 @@ function buildPlanPayload(booking, body) {
     .filter(Boolean);
 
   return {
-    booking_id: booking.id,
-    program: booking.program,
+    booking_id: target.targetType === 'booking' ? target.id : null,
+    availability_id: target.targetType === 'availability' ? target.id : null,
+    program: target.program,
     title: String(body.title || '').trim(),
     player_overview: String(body.player_overview || '').trim(),
     player_topics: topics,

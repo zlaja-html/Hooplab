@@ -66,6 +66,8 @@ async function loadAvailability() {
 
     currentAvailability = result.availability || [];
     renderAvailability(currentAvailability);
+    renderTrainingPlans(currentTrainingPlans);
+    renderBookingOptions();
   } catch {
     availabilityList.innerHTML = '<p class="form-hint error">Could not load availability.</p>';
   }
@@ -86,6 +88,7 @@ async function loadTrainingPlans() {
     currentTrainingPlans = result.plans || [];
     renderTrainingPlans(currentTrainingPlans);
     renderBookings(currentBookings);
+    renderAvailability(currentAvailability);
     renderBookingOptions();
   } catch {
     trainingPlanList.innerHTML = '<p class="form-hint error">Could not load training plans.</p>';
@@ -153,7 +156,7 @@ function renderBookings(bookings) {
             <button class="button primary" type="button" data-accept-booking="${escapeHtml(booking.id)}">Accept and email player</button>
             <button class="button danger" type="button" data-refuse-booking="${escapeHtml(booking.id)}">Refuse and email player</button>
           ` : ''}
-          ${supportsTrainingPlan(booking.program) ? `
+          ${supportsBookingTrainingPlan(booking.program) ? `
             <button class="button secondary light" type="button" data-edit-plan-booking="${escapeHtml(booking.id)}">
               ${plan ? 'Edit training plan' : 'Attach training plan'}
             </button>
@@ -175,7 +178,7 @@ function renderBookings(bookings) {
   });
 
   list.querySelectorAll('[data-edit-plan-booking]').forEach(button => {
-    button.addEventListener('click', () => loadPlanIntoForm(button.dataset.editPlanBooking));
+    button.addEventListener('click', () => loadPlanIntoForm(`booking:${button.dataset.editPlanBooking}`));
   });
 }
 
@@ -195,13 +198,20 @@ function renderAvailability(availability) {
   }
 
   sorted.forEach(slot => {
+    const plan = currentTrainingPlans.find(item => item.availability_id === slot.id);
     const card = document.createElement('article');
     card.className = 'appointment-card';
     card.innerHTML = `
       <strong>${escapeHtml(slot.appointment || '')}</strong>
       <span>${escapeHtml(labelProgram(slot.program))} - Capacity ${escapeHtml(slot.capacity || 1)} - ${slot.active ? 'Active' : 'Hidden'}</span>
       <span>${escapeHtml(slot.label || '')}${slot.note ? ` - ${escapeHtml(slot.note)}` : ''}</span>
+      ${plan ? renderPlanSnippet(plan) : ''}
       <div class="booking-actions">
+        ${supportsSlotTrainingPlan(slot.program) ? `
+          <button class="button secondary light" type="button" data-edit-plan-slot="${escapeHtml(slot.id)}">
+            ${plan ? 'Edit training plan' : 'Attach training plan'}
+          </button>
+        ` : ''}
         <button class="button secondary light" type="button" data-toggle-slot="${escapeHtml(slot.id)}" data-active="${slot.active ? 'false' : 'true'}">
           ${slot.active ? 'Hide appointment' : 'Show appointment'}
         </button>
@@ -220,6 +230,10 @@ function renderAvailability(availability) {
   availabilityList.querySelectorAll('[data-delete-slot]').forEach(button => {
     button.addEventListener('click', () => deleteAvailability(button.dataset.deleteSlot, button));
   });
+
+  availabilityList.querySelectorAll('[data-edit-plan-slot]').forEach(button => {
+    button.addEventListener('click', () => loadPlanIntoForm(`availability:${button.dataset.editPlanSlot}`));
+  });
 }
 
 function renderTrainingPlans(plans) {
@@ -234,7 +248,7 @@ function renderTrainingPlans(plans) {
   }
 
   plans.forEach(plan => {
-    const booking = currentBookings.find(item => item.id === plan.booking_id);
+    const target = getPlanTarget(plan);
     const totalMinutes = totalPlanMinutes(plan.drills);
     const card = document.createElement('article');
     card.className = 'appointment-card';
@@ -244,7 +258,7 @@ function renderTrainingPlans(plans) {
         <span class="status-pill accepted">${escapeHtml(totalMinutes)} min</span>
       </div>
       <span>${escapeHtml(labelProgram(plan.program || 'appointment'))}</span>
-      <span>${escapeHtml(bookingLabel(booking))}</span>
+      <span>${escapeHtml(planTargetLabel(target))}</span>
       <span>${escapeHtml(plan.player_overview || '')}</span>
       ${renderTopicSummary(plan.player_topics)}
       <div class="booking-actions">
@@ -269,21 +283,31 @@ function renderBookingOptions() {
     return;
   }
 
-  const eligibleBookings = currentBookings
-    .filter(booking => supportsTrainingPlan(booking.program))
-    .filter(booking => booking.status !== 'refused');
-
   const currentValue = trainingPlanBooking.value;
-  trainingPlanBooking.innerHTML = '<option value="">Choose a booking</option>';
+  trainingPlanBooking.innerHTML = '<option value="">Choose a workout, session, or tryout</option>';
 
-  eligibleBookings.forEach(booking => {
-    const option = document.createElement('option');
-    option.value = booking.id;
-    option.textContent = bookingLabel(booking);
-    trainingPlanBooking.append(option);
-  });
+  currentAvailability
+    .filter(slot => supportsSlotTrainingPlan(slot.program) && slot.active)
+    .sort((a, b) => String(a.appointment).localeCompare(String(b.appointment)))
+    .forEach(slot => {
+      const option = document.createElement('option');
+      option.value = `availability:${slot.id}`;
+      option.textContent = slotLabel(slot);
+      trainingPlanBooking.append(option);
+    });
 
-  trainingPlanBooking.value = eligibleBookings.some(booking => booking.id === currentValue) ? currentValue : '';
+  currentBookings
+    .filter(booking => supportsBookingTrainingPlan(booking.program))
+    .filter(booking => booking.status !== 'refused')
+    .sort((a, b) => String(a.created_at).localeCompare(String(b.created_at)))
+    .forEach(booking => {
+      const option = document.createElement('option');
+      option.value = `booking:${booking.id}`;
+      option.textContent = bookingLabel(booking);
+      trainingPlanBooking.append(option);
+    });
+
+  trainingPlanBooking.value = [...trainingPlanBooking.options].some(option => option.value === currentValue) ? currentValue : '';
 }
 
 function renderPlanSnippet(plan) {
@@ -305,8 +329,12 @@ function renderTopicSummary(topics) {
   return `<span>${escapeHtml(safeTopics.join(' | '))}</span>`;
 }
 
-function supportsTrainingPlan(program) {
-  return program === 'individual-workouts' || program === 'group-sessions' || program === 'tryouts';
+function supportsSlotTrainingPlan(program) {
+  return program === 'individual-workouts' || program === 'group-sessions';
+}
+
+function supportsBookingTrainingPlan(program) {
+  return program === 'tryouts';
 }
 
 function bookingLabel(booking) {
@@ -317,21 +345,66 @@ function bookingLabel(booking) {
   return `${labelProgram(booking.program)} - ${booking.name || 'Unknown player'} - ${formatAppointment(booking)}`;
 }
 
-function loadPlanIntoForm(bookingId) {
-  const plan = currentTrainingPlans.find(item => item.booking_id === bookingId);
+function slotLabel(slot) {
+  if (!slot) {
+    return 'Detached appointment';
+  }
+
+  const appointment = slot.appointment || `${slot.appointment_date || ''} ${String(slot.appointment_time || '').slice(0, 5)}`.trim();
+  return `${labelProgram(slot.program)} - ${slot.label || appointment} - ${appointment}`;
+}
+
+function planTargetLabel(target) {
+  if (!target) {
+    return 'Detached target';
+  }
+
+  if (target.type === 'availability') {
+    return slotLabel(target.record);
+  }
+
+  return bookingLabel(target.record);
+}
+
+function getPlanTarget(plan) {
+  if (plan.availability_id) {
+    return {
+      type: 'availability',
+      record: currentAvailability.find(item => item.id === plan.availability_id) || null
+    };
+  }
+
+  if (plan.booking_id) {
+    return {
+      type: 'booking',
+      record: currentBookings.find(item => item.id === plan.booking_id) || null
+    };
+  }
+
+  return null;
+}
+
+function loadPlanIntoForm(targetValue) {
+  const [targetType, targetId] = String(targetValue).split(':');
+  const plan = targetType === 'availability'
+    ? currentTrainingPlans.find(item => item.availability_id === targetId)
+    : currentTrainingPlans.find(item => item.booking_id === targetId);
 
   if (plan) {
     loadPlanIntoFormById(plan.id);
     return;
   }
 
-  const booking = currentBookings.find(item => item.id === bookingId);
+  const titleBase = targetType === 'availability'
+    ? slotLabel(currentAvailability.find(item => item.id === targetId))
+    : bookingLabel(currentBookings.find(item => item.id === targetId));
+
   resetTrainingPlanForm({
-    bookingId,
-    title: booking ? `${booking.name || 'Player'} ${labelProgram(booking.program)} plan` : ''
+    targetValue,
+    title: titleBase ? `${titleBase} plan` : ''
   });
   trainingPlanHint.className = 'form-hint';
-  trainingPlanHint.textContent = 'Create the training plan and save it to attach it to this booking.';
+  trainingPlanHint.textContent = 'Create the training plan and save it to attach it to this target.';
   trainingPlanForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
@@ -343,7 +416,7 @@ function loadPlanIntoFormById(planId) {
   }
 
   trainingPlanIdInput.value = plan.id || '';
-  trainingPlanBooking.value = plan.booking_id || '';
+  trainingPlanBooking.value = plan.availability_id ? `availability:${plan.availability_id}` : `booking:${plan.booking_id}`;
   document.getElementById('training-plan-title').value = plan.title || '';
   document.getElementById('training-plan-overview').value = plan.player_overview || '';
   document.getElementById('training-plan-topics').value = Array.isArray(plan.player_topics) ? plan.player_topics.join('\n') : '';
@@ -368,15 +441,15 @@ function resetTrainingPlanForm(defaults = {}) {
   trainingPlanIdInput.value = '';
   trainingDrills.innerHTML = '';
   appendDrillRow();
-  if (defaults.bookingId) {
-    trainingPlanBooking.value = defaults.bookingId;
+  if (defaults.targetValue) {
+    trainingPlanBooking.value = defaults.targetValue;
   }
   if (defaults.title) {
     document.getElementById('training-plan-title').value = defaults.title;
   }
   deleteTrainingPlanButton.hidden = true;
   trainingPlanHint.className = 'form-hint';
-  trainingPlanHint.textContent = 'Attach a plan to a booking, add exact drills, and save it.';
+  trainingPlanHint.textContent = 'Attach a plan to a workout, session, or tryout, add exact drills, and save it.';
   updateTrainingPlanTotal();
 }
 
@@ -704,7 +777,7 @@ trainingPlanForm?.addEventListener('submit', async event => {
 
   const payload = {
     id: trainingPlanIdInput.value || undefined,
-    booking_id: trainingPlanBooking.value,
+    target: trainingPlanBooking.value,
     title: document.getElementById('training-plan-title').value,
     player_overview: document.getElementById('training-plan-overview').value,
     player_topics: document.getElementById('training-plan-topics').value,

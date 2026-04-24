@@ -173,6 +173,30 @@ export async function listAvailability({ activeOnly = false } = {}) {
   return response.json();
 }
 
+export async function getAvailability(id) {
+  const fields = [
+    'id',
+    'program',
+    'appointment',
+    'appointment_date',
+    'appointment_time',
+    'label',
+    'note',
+    'capacity',
+    'active',
+    'created_at'
+  ].join(',');
+  const response = await supabaseFetch(AVAILABILITY_TABLE, `?id=eq.${encodeURIComponent(id)}&select=${fields}&limit=1`);
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase availability lookup failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
 export async function createAvailability(slot) {
   const response = await supabaseFetch(AVAILABILITY_TABLE, '', {
     method: 'POST',
@@ -230,6 +254,7 @@ export async function listTrainingPlans() {
   const fields = [
     'id',
     'booking_id',
+    'availability_id',
     'program',
     'title',
     'player_overview',
