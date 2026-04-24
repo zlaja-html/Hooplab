@@ -278,6 +278,32 @@ export async function listTrainingPlans() {
   return response.json();
 }
 
+export async function getTrainingPlan(id) {
+  const fields = [
+    'id',
+    'booking_id',
+    'availability_id',
+    'program',
+    'title',
+    'player_overview',
+    'player_topics',
+    'prep_notes',
+    'coach_notes',
+    'drills',
+    'created_at',
+    'updated_at'
+  ].join(',');
+  const response = await supabaseFetch(TRAINING_PLANS_TABLE, `?id=eq.${encodeURIComponent(id)}&select=${fields}&limit=1`);
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase training-plan lookup failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
 export async function createTrainingPlan(plan) {
   const response = await supabaseFetch(TRAINING_PLANS_TABLE, '', {
     method: 'POST',

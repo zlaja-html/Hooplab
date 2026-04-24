@@ -5,7 +5,7 @@ export function hasEmailConfig() {
   return Boolean(process.env.RESEND_API_KEY);
 }
 
-export async function sendEmail({ to = [DESTINATION], subject, text }) {
+export async function sendEmail({ to = [DESTINATION], subject, text, html }) {
   const apiKey = process.env.RESEND_API_KEY;
 
   if (!apiKey) {
@@ -29,7 +29,8 @@ export async function sendEmail({ to = [DESTINATION], subject, text }) {
       from,
       to,
       subject,
-      text
+      text,
+      ...(html ? { html } : {})
     })
   });
 

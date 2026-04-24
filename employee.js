@@ -160,6 +160,7 @@ function renderBookings(bookings) {
             <button class="button secondary light" type="button" data-edit-plan-booking="${escapeHtml(booking.id)}">
               ${plan ? 'Edit training plan' : 'Attach training plan'}
             </button>
+            ${plan ? `<button class="button primary" type="button" data-send-plan-inline="${escapeHtml(plan.id)}">Send to Zlaja</button>` : ''}
           ` : ''}
         </div>
       `;
@@ -179,6 +180,10 @@ function renderBookings(bookings) {
 
   list.querySelectorAll('[data-edit-plan-booking]').forEach(button => {
     button.addEventListener('click', () => loadPlanIntoForm(`booking:${button.dataset.editPlanBooking}`));
+  });
+
+  list.querySelectorAll('[data-send-plan-inline]').forEach(button => {
+    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlanInline, button));
   });
 }
 
@@ -211,6 +216,7 @@ function renderAvailability(availability) {
           <button class="button secondary light" type="button" data-edit-plan-slot="${escapeHtml(slot.id)}">
             ${plan ? 'Edit training plan' : 'Attach training plan'}
           </button>
+          ${plan ? `<button class="button primary" type="button" data-send-plan-slot="${escapeHtml(plan.id)}">Send to Zlaja</button>` : ''}
         ` : ''}
         <button class="button secondary light" type="button" data-toggle-slot="${escapeHtml(slot.id)}" data-active="${slot.active ? 'false' : 'true'}">
           ${slot.active ? 'Hide appointment' : 'Show appointment'}
@@ -233,6 +239,10 @@ function renderAvailability(availability) {
 
   availabilityList.querySelectorAll('[data-edit-plan-slot]').forEach(button => {
     button.addEventListener('click', () => loadPlanIntoForm(`availability:${button.dataset.editPlanSlot}`));
+  });
+
+  availabilityList.querySelectorAll('[data-send-plan-slot]').forEach(button => {
+    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlanSlot, button));
   });
 }
 
@@ -263,6 +273,7 @@ function renderTrainingPlans(plans) {
       ${renderTopicSummary(plan.player_topics)}
       <div class="booking-actions">
         <button class="button secondary light" type="button" data-edit-plan="${escapeHtml(plan.id)}">Edit plan</button>
+        <button class="button primary" type="button" data-send-plan="${escapeHtml(plan.id)}">Send to Zlaja</button>
         <button class="button danger" type="button" data-delete-plan="${escapeHtml(plan.id)}">Delete</button>
       </div>
     `;
@@ -275,6 +286,10 @@ function renderTrainingPlans(plans) {
 
   trainingPlanList.querySelectorAll('[data-delete-plan]').forEach(button => {
     button.addEventListener('click', () => deleteTrainingPlan(button.dataset.deletePlan, button));
+  });
+
+  trainingPlanList.querySelectorAll('[data-send-plan]').forEach(button => {
+    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlan, button));
   });
 }
 
@@ -670,6 +685,42 @@ async function deleteTrainingPlan(id, button) {
     }
     trainingPlanHint.className = 'form-hint error';
     trainingPlanHint.textContent = 'Could not delete training plan.';
+  }
+}
+
+async function sendTrainingPlan(id, button) {
+  button.disabled = true;
+  const originalText = button.textContent;
+  button.textContent = 'Sending...';
+  trainingPlanHint.className = 'form-hint';
+  trainingPlanHint.textContent = 'Sending training plan email...';
+
+  try {
+    const response = await fetch('/api/send-training-plan', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id })
+    });
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      button.disabled = false;
+      button.textContent = originalText;
+      trainingPlanHint.className = 'form-hint error';
+      trainingPlanHint.textContent = result.error || 'Could not send training plan.';
+      return;
+    }
+
+    button.disabled = false;
+    button.textContent = originalText;
+    trainingPlanHint.className = 'form-hint success';
+    trainingPlanHint.textContent = 'Training plan sent to zlaja.077@gmail.com.';
+  } catch {
+    button.disabled = false;
+    button.textContent = originalText;
+    trainingPlanHint.className = 'form-hint error';
+    trainingPlanHint.textContent = 'Could not send training plan.';
   }
 }
 
