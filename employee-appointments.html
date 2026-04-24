@@ -52,12 +52,15 @@
     </section>
 
     <section class="section staff-dashboard" id="staff-dashboard" hidden>
-      <div class="section-heading">
-        <p class="eyebrow">Bookings</p>
-        <h2>Manage appointments.</h2>
-        <p class="section-note">
-          Add availability, review player requests, and confirm or refuse each booking.
-        </p>
+      <div class="section-heading staff-dashboard-head">
+        <div>
+          <p class="eyebrow">Bookings</p>
+          <h2>Manage appointments.</h2>
+          <p class="section-note">
+            Add availability, review player requests, and confirm or refuse each booking.
+          </p>
+        </div>
+        <button class="button secondary light" type="button" id="lock-staff">Log out</button>
       </div>
 
       <div class="staff-layout">
@@ -167,14 +170,23 @@
           <div class="appointment-list compact" id="training-plan-list"></div>
         </section>
       </div>
-
-      <div class="staff-actions">
-        <button class="button secondary light" type="button" id="lock-staff">Lock</button>
-      </div>
-
       <section class="staff-panel">
         <h3>Player bookings</h3>
         <div class="appointment-list" id="appointment-list"></div>
+      </section>
+
+      <section class="staff-panel flyers-panel">
+        <h3>Flyers and posts</h3>
+        <div class="flyer-grid">
+          <article class="flyer-card">
+            <img src="images/Day1Flyer.png" alt="Day 1 flyer">
+            <span>Day 1 flyer</span>
+          </article>
+          <article class="flyer-card">
+            <img src="images/sponzor-Hooplab.jpeg" alt="HoopLab sponsor post">
+            <span>HoopLab sponsor post</span>
+          </article>
+        </div>
       </section>
     </section>
   </main>

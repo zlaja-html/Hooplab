@@ -7,7 +7,10 @@ import {
   hasSupabaseConfig
 } from './_supabase.js';
 
-const PLAN_DESTINATION = 'zlaja.077@gmail.com';
+const PLAN_DESTINATIONS = {
+  zlatan: 'zlaja.077@gmail.com',
+  harun: 'boeblingen.panthers.info@gmail.com'
+};
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -37,8 +40,10 @@ export default async function handler(req, res) {
 
     const target = await loadPlanTarget(plan);
 
+    const recipient = resolveRecipient(body.recipient);
+
     await sendEmail({
-      to: [PLAN_DESTINATION],
+      to: [recipient.email],
       subject: `HoopLab training plan: ${plan.title}`,
       text: buildPlanText(plan, target),
       html: buildPlanHtml(plan, target)
@@ -49,6 +54,14 @@ export default async function handler(req, res) {
     console.error('Send training plan failed', error);
     return res.status(500).json({ error: 'Could not send training plan.' });
   }
+}
+
+function resolveRecipient(value) {
+  const key = value === 'harun' ? 'harun' : 'zlatan';
+  return {
+    key,
+    email: PLAN_DESTINATIONS[key]
+  };
 }
 
 async function loadPlanTarget(plan) {

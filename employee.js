@@ -16,7 +16,7 @@ const trainingPlanTotal = document.getElementById('training-plan-total');
 const addDrillButton = document.getElementById('add-drill');
 const resetTrainingPlanButton = document.getElementById('reset-training-plan');
 const deleteTrainingPlanButton = document.getElementById('delete-training-plan');
-const lockButton = document.getElementById('lock-staff');
+const logoutButton = document.getElementById('lock-staff');
 let currentBookings = [];
 let currentAvailability = [];
 let currentTrainingPlans = [];
@@ -160,7 +160,10 @@ function renderBookings(bookings) {
             <button class="button secondary light" type="button" data-edit-plan-booking="${escapeHtml(booking.id)}">
               ${plan ? 'Edit training plan' : 'Attach training plan'}
             </button>
-            ${plan ? `<button class="button primary" type="button" data-send-plan-inline="${escapeHtml(plan.id)}">Send to Zlaja</button>` : ''}
+            ${plan ? `
+              <button class="button primary" type="button" data-send-plan-inline="${escapeHtml(plan.id)}" data-recipient="zlatan">Send to Zlatan</button>
+              <button class="button primary" type="button" data-send-plan-inline="${escapeHtml(plan.id)}" data-recipient="harun">Send to Harun</button>
+            ` : ''}
           ` : ''}
         </div>
       `;
@@ -183,7 +186,7 @@ function renderBookings(bookings) {
   });
 
   list.querySelectorAll('[data-send-plan-inline]').forEach(button => {
-    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlanInline, button));
+    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlanInline, button, button.dataset.recipient));
   });
 }
 
@@ -216,7 +219,10 @@ function renderAvailability(availability) {
           <button class="button secondary light" type="button" data-edit-plan-slot="${escapeHtml(slot.id)}">
             ${plan ? 'Edit training plan' : 'Attach training plan'}
           </button>
-          ${plan ? `<button class="button primary" type="button" data-send-plan-slot="${escapeHtml(plan.id)}">Send to Zlaja</button>` : ''}
+          ${plan ? `
+            <button class="button primary" type="button" data-send-plan-slot="${escapeHtml(plan.id)}" data-recipient="zlatan">Send to Zlatan</button>
+            <button class="button primary" type="button" data-send-plan-slot="${escapeHtml(plan.id)}" data-recipient="harun">Send to Harun</button>
+          ` : ''}
         ` : ''}
         <button class="button secondary light" type="button" data-toggle-slot="${escapeHtml(slot.id)}" data-active="${slot.active ? 'false' : 'true'}">
           ${slot.active ? 'Hide appointment' : 'Show appointment'}
@@ -242,7 +248,7 @@ function renderAvailability(availability) {
   });
 
   availabilityList.querySelectorAll('[data-send-plan-slot]').forEach(button => {
-    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlanSlot, button));
+    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlanSlot, button, button.dataset.recipient));
   });
 }
 
@@ -273,7 +279,8 @@ function renderTrainingPlans(plans) {
       ${renderTopicSummary(plan.player_topics)}
       <div class="booking-actions">
         <button class="button secondary light" type="button" data-edit-plan="${escapeHtml(plan.id)}">Edit plan</button>
-        <button class="button primary" type="button" data-send-plan="${escapeHtml(plan.id)}">Send to Zlaja</button>
+        <button class="button primary" type="button" data-send-plan="${escapeHtml(plan.id)}" data-recipient="zlatan">Send to Zlatan</button>
+        <button class="button primary" type="button" data-send-plan="${escapeHtml(plan.id)}" data-recipient="harun">Send to Harun</button>
         <button class="button danger" type="button" data-delete-plan="${escapeHtml(plan.id)}">Delete</button>
       </div>
     `;
@@ -289,7 +296,7 @@ function renderTrainingPlans(plans) {
   });
 
   trainingPlanList.querySelectorAll('[data-send-plan]').forEach(button => {
-    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlan, button));
+    button.addEventListener('click', () => sendTrainingPlan(button.dataset.sendPlan, button, button.dataset.recipient));
   });
 }
 
@@ -688,19 +695,27 @@ async function deleteTrainingPlan(id, button) {
   }
 }
 
-async function sendTrainingPlan(id, button) {
+function recipientLabel(recipient) {
+  return recipient === 'harun' ? 'Harun' : 'Zlatan';
+}
+
+function recipientEmail(recipient) {
+  return recipient === 'harun' ? 'boeblingen.panthers.info@gmail.com' : 'zlaja.077@gmail.com';
+}
+
+async function sendTrainingPlan(id, button, recipient = 'zlatan') {
   button.disabled = true;
   const originalText = button.textContent;
   button.textContent = 'Sending...';
   trainingPlanHint.className = 'form-hint';
-  trainingPlanHint.textContent = 'Sending training plan email...';
+  trainingPlanHint.textContent = `Sending training plan email to ${recipientLabel(recipient)}...`;
 
   try {
     const response = await fetch('/api/send-training-plan', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id })
+      body: JSON.stringify({ id, recipient })
     });
     const result = await response.json().catch(() => ({}));
 
@@ -715,7 +730,7 @@ async function sendTrainingPlan(id, button) {
     button.disabled = false;
     button.textContent = originalText;
     trainingPlanHint.className = 'form-hint success';
-    trainingPlanHint.textContent = 'Training plan sent to zlaja.077@gmail.com.';
+    trainingPlanHint.textContent = `Training plan sent to ${recipientEmail(recipient)}.`;
   } catch {
     button.disabled = false;
     button.textContent = originalText;
@@ -880,7 +895,7 @@ deleteTrainingPlanButton?.addEventListener('click', () => {
   }
 });
 
-lockButton?.addEventListener('click', lockDashboard);
+logoutButton?.addEventListener('click', lockDashboard);
 
 fetch('/api/bookings', { credentials: 'include' })
   .then(response => {
