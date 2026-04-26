@@ -22,6 +22,7 @@ const translations = {
     hero: {
       eyebrow: 'International basketball development and exposure',
       title: 'For players chasing the next level.',
+      copy: 'HoopLab Agency is a basketball development and exposure agency in Germany, helping players access tryouts, tours, workouts, scouting, and real next-step opportunities across Europe.',
       start: 'Start application',
       explore: 'Explore programs'
     },
@@ -221,6 +222,7 @@ const translations = {
     hero: {
       eyebrow: 'Internationale Basketball-Entwicklung und Sichtbarkeit',
       title: 'Für Spieler, die das nächste Level jagen.',
+      copy: 'HoopLab Agency ist eine Basketball-Entwicklungs- und Exposure-Agentur in Deutschland und hilft Spielern dabei, ueber Tryouts, Tours, Workouts, Scouting und echte Anschlusschancen den naechsten Schritt in Europa zu erreichen.',
       start: 'Bewerbung starten',
       explore: 'Programme ansehen'
     },
