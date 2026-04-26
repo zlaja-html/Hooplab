@@ -102,7 +102,7 @@ async function validatePlanPayload(body) {
   }
 
   if (!String(body.player_overview || '').trim()) {
-    return { error: 'Add the player-facing overview.' };
+    return { error: 'Add the session objective.' };
   }
 
   const drills = Array.isArray(body.drills) ? body.drills : [];
@@ -132,18 +132,13 @@ function buildPlanPayload(target, body) {
     }))
     .filter(drill => drill.title && drill.minutes > 0);
 
-  const topics = String(body.player_topics || '')
-    .split('\n')
-    .map(item => item.trim())
-    .filter(Boolean);
-
   return {
     booking_id: target.targetType === 'booking' ? target.id : null,
     availability_id: target.targetType === 'availability' ? target.id : null,
     program: target.program,
     title: String(body.title || '').trim(),
     player_overview: String(body.player_overview || '').trim(),
-    player_topics: topics,
+    player_topics: [],
     prep_notes: String(body.prep_notes || '').trim() || null,
     coach_notes: String(body.coach_notes || '').trim() || null,
     drills,

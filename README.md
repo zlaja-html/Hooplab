@@ -108,7 +108,7 @@ revoke all on table public.hooplab_training_plans from anon, authenticated;
 
 The unique index prevents two players from booking the same individual workout slot. Group sessions can receive multiple bookings; their visible capacity is controlled in `appointments.js`.
 Staff can add and hide available appointments from `employee-appointments.html`; those slots are stored in `hooplab_availability`. Staff can accept or refuse player booking requests, and the player receives an email update.
-Staff can also build drill-by-drill training plans attached to individual-workout slots, group-session slots, and tryout bookings. Each plan stores a coach-facing session breakdown plus a simpler player-facing overview and topic summary.
+Staff can also build training plans attached to individual-workout slots, group-session slots, and tryout bookings. Plans now use a faster coach-facing session objective plus a quick-entry session breakdown instead of separate player-facing topics and drill cards.
 The staff page also includes a shared flyers/posts gallery backed by Supabase, so uploads and removals are visible to every staff member instead of only one browser.
 Because this app talks to Supabase only through server-side Vercel functions using `SUPABASE_SERVICE_ROLE_KEY`, RLS can stay enabled with no public policies on these tables.
 If the tables already exist, run [supabase/secure-hooplab.sql](/C:/Users/ZBESIRE/Desktop/Hooplab/supabase/secure-hooplab.sql:1) in the Supabase SQL editor to harden them.

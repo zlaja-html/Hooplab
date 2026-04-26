@@ -126,12 +126,8 @@
               <input type="text" name="title" id="training-plan-title" placeholder="Shooting balance and rim finishing" required>
             </label>
             <label>
-              Player-facing overview
-              <textarea name="player_overview" id="training-plan-overview" rows="4" placeholder="A simple summary you can send to players." required></textarea>
-            </label>
-            <label>
-              Player-facing topics
-              <textarea name="player_topics" id="training-plan-topics" rows="4" placeholder="One selling point per line&#10;Finishing through contact&#10;Weak-hand decision making&#10;Pick-and-roll reads"></textarea>
+              Session objective
+              <textarea name="player_overview" id="training-plan-overview" rows="3" placeholder="Coach-facing session goal and emphasis." required></textarea>
             </label>
             <label>
               Prep and equipment
@@ -144,13 +140,15 @@
 
             <div class="plan-drill-head">
               <div>
-                <h4>Drills and timing</h4>
-                <p class="section-note">Add each drill with exact duration so the session is ready to coach.</p>
+                <h4>Session breakdown</h4>
+                <p class="section-note">Use one line per block: minutes | block | focus | notes</p>
               </div>
-              <button class="button secondary light" type="button" id="add-drill">Add drill</button>
             </div>
 
-            <div class="plan-drill-list" id="training-drills"></div>
+            <label>
+              Quick plan entry
+              <textarea name="training_breakdown" id="training-plan-breakdown" rows="8" placeholder="8 | Dynamic warm-up | Hips, feet, pace | 2-ball + movement prep&#10;12 | Finishing series | Through contact | Score by make-stop pairs&#10;15 | PnR reads | Pocket pass and reject | Start guided, finish live"></textarea>
+            </label>
 
             <div class="plan-summary">
               <strong>Total session time</strong>

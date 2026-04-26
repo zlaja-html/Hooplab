@@ -11,9 +11,8 @@ const trainingPlanIdInput = document.getElementById('training-plan-id');
 const trainingPlanBooking = document.getElementById('training-plan-booking');
 const trainingPlanHint = document.getElementById('training-plan-hint');
 const trainingPlanList = document.getElementById('training-plan-list');
-const trainingDrills = document.getElementById('training-drills');
+const trainingPlanBreakdown = document.getElementById('training-plan-breakdown');
 const trainingPlanTotal = document.getElementById('training-plan-total');
-const addDrillButton = document.getElementById('add-drill');
 const resetTrainingPlanButton = document.getElementById('reset-training-plan');
 const deleteTrainingPlanButton = document.getElementById('delete-training-plan');
 const logoutButton = document.getElementById('lock-staff');
@@ -425,7 +424,7 @@ function renderTrainingPlans(plans) {
       <span>${escapeHtml(labelProgram(plan.program || 'appointment'))}</span>
       <span>${escapeHtml(planTargetLabel(target))}</span>
       <span>${escapeHtml(plan.player_overview || '')}</span>
-      ${renderTopicSummary(plan.player_topics)}
+      ${renderPlanSummary(plan)}
       <div class="booking-actions">
         <button class="button secondary light" type="button" data-edit-plan="${escapeHtml(plan.id)}">Edit plan</button>
         <button class="button primary" type="button" data-send-plan="${escapeHtml(plan.id)}" data-recipient="zlatan">Send to Zlatan</button>
@@ -485,19 +484,18 @@ function renderPlanSnippet(plan) {
   return `
     <div class="plan-attachment">
       <strong>${escapeHtml(plan.title || 'Training plan attached')}</strong>
-      <span>${escapeHtml(totalPlanMinutes(plan.drills))} minutes - ${escapeHtml((plan.player_topics || []).slice(0, 2).join(' | ') || 'Overview ready')}</span>
+      <span>${escapeHtml(totalPlanMinutes(plan.drills))} minutes - ${escapeHtml(planBlockSummary(plan.drills))}</span>
     </div>
   `;
 }
 
-function renderTopicSummary(topics) {
-  const safeTopics = Array.isArray(topics) ? topics : [];
+function renderPlanSummary(plan) {
+  return `<span>${escapeHtml(planBlockSummary(plan.drills))}</span>`;
+}
 
-  if (!safeTopics.length) {
-    return '<span>Player summary ready.</span>';
-  }
-
-  return `<span>${escapeHtml(safeTopics.join(' | '))}</span>`;
+function planBlockSummary(drills) {
+  const count = Array.isArray(drills) ? drills.length : 0;
+  return count === 1 ? '1 block ready' : `${count} blocks ready`;
 }
 
 function supportsSlotTrainingPlan(program) {
@@ -590,15 +588,9 @@ function loadPlanIntoFormById(planId) {
   trainingPlanBooking.value = plan.availability_id ? `availability:${plan.availability_id}` : `booking:${plan.booking_id}`;
   document.getElementById('training-plan-title').value = plan.title || '';
   document.getElementById('training-plan-overview').value = plan.player_overview || '';
-  document.getElementById('training-plan-topics').value = Array.isArray(plan.player_topics) ? plan.player_topics.join('\n') : '';
   document.getElementById('training-plan-prep').value = plan.prep_notes || '';
   document.getElementById('training-plan-coach-notes').value = plan.coach_notes || '';
-  trainingDrills.innerHTML = '';
-  (Array.isArray(plan.drills) ? plan.drills : []).forEach(drill => appendDrillRow(drill));
-
-  if (!trainingDrills.children.length) {
-    appendDrillRow();
-  }
+  trainingPlanBreakdown.value = formatTrainingBreakdown(plan.drills);
 
   deleteTrainingPlanButton.hidden = false;
   updateTrainingPlanTotal();
@@ -610,8 +602,6 @@ function loadPlanIntoFormById(planId) {
 function resetTrainingPlanForm(defaults = {}) {
   trainingPlanForm?.reset();
   trainingPlanIdInput.value = '';
-  trainingDrills.innerHTML = '';
-  appendDrillRow();
   if (defaults.targetValue) {
     trainingPlanBooking.value = defaults.targetValue;
   }
@@ -620,58 +610,12 @@ function resetTrainingPlanForm(defaults = {}) {
   }
   deleteTrainingPlanButton.hidden = true;
   trainingPlanHint.className = 'form-hint';
-  trainingPlanHint.textContent = 'Attach a plan to a workout, session, or tryout, add exact drills, and save it.';
+  trainingPlanHint.textContent = 'Attach a plan to a workout, session, or tryout, add the session breakdown, and save it.';
   updateTrainingPlanTotal();
 }
 
-function appendDrillRow(drill = {}) {
-  const row = document.createElement('div');
-  row.className = 'drill-row';
-  row.innerHTML = `
-    <div class="form-row">
-      <label>
-        Drill
-        <input type="text" name="drill_title" value="${escapeHtml(drill.title || '')}" placeholder="Closeout footwork into live reads" required>
-      </label>
-      <label>
-        Minutes
-        <input type="number" name="drill_minutes" min="1" max="180" value="${escapeHtml(drill.minutes || '')}" placeholder="12" required>
-      </label>
-    </div>
-    <label>
-      Focus
-      <input type="text" name="drill_focus" value="${escapeHtml(drill.focus || '')}" placeholder="Decision-making under pressure">
-    </label>
-    <label>
-      Coaching details
-      <textarea name="drill_notes" rows="2" placeholder="Set-up, progression, coaching cues, scoring system">${escapeHtml(drill.notes || '')}</textarea>
-    </label>
-    <div class="booking-actions">
-      <button class="button danger" type="button" data-remove-drill>Remove drill</button>
-    </div>
-  `;
-  trainingDrills.append(row);
-
-  row.querySelectorAll('input, textarea').forEach(field => {
-    field.addEventListener('input', updateTrainingPlanTotal);
-  });
-
-  row.querySelector('[data-remove-drill]')?.addEventListener('click', () => {
-    row.remove();
-    if (!trainingDrills.children.length) {
-      appendDrillRow();
-    }
-    updateTrainingPlanTotal();
-  });
-}
-
 function collectDrills() {
-  return [...trainingDrills.querySelectorAll('.drill-row')].map(row => ({
-    title: row.querySelector('[name="drill_title"]')?.value || '',
-    minutes: row.querySelector('[name="drill_minutes"]')?.value || '',
-    focus: row.querySelector('[name="drill_focus"]')?.value || '',
-    notes: row.querySelector('[name="drill_notes"]')?.value || ''
-  }));
+  return parseTrainingBreakdown(trainingPlanBreakdown?.value || '');
 }
 
 function updateTrainingPlanTotal() {
@@ -681,6 +625,82 @@ function updateTrainingPlanTotal() {
 
 function totalPlanMinutes(drills) {
   return (Array.isArray(drills) ? drills : []).reduce((sum, drill) => sum + (Number(drill.minutes) || 0), 0);
+}
+
+function parseTrainingBreakdown(rawValue) {
+  return String(rawValue || '')
+    .split(/\r?\n/)
+    .map(line => line.trim())
+    .filter(Boolean)
+    .map(parseTrainingLine)
+    .filter(block => block.title && block.minutes > 0);
+}
+
+function parseTrainingLine(line) {
+  const parts = line.split('|').map(part => part.trim());
+
+  if (parts.length > 1) {
+    const [minutesPart, titlePart, focusPart = '', ...noteParts] = parts;
+    return {
+      title: titlePart || '',
+      minutes: extractMinutes(minutesPart),
+      focus: focusPart,
+      notes: noteParts.join(' | ')
+    };
+  }
+
+  const match = line.match(/^\s*(\d+(?:\.\d+)?)\s*(?:m|min|mins|minute|minutes)?\s*[-:]\s*(.+)$/i);
+
+  if (match) {
+    return {
+      title: match[2].trim(),
+      minutes: Number(match[1]) || 0,
+      focus: '',
+      notes: ''
+    };
+  }
+
+  const shorthandMatch = line.match(/^\s*(\d+(?:\.\d+)?)\s*(?:m|min|mins|minute|minutes)?\s+(.+)$/i);
+
+  if (shorthandMatch) {
+    return {
+      title: shorthandMatch[2].trim(),
+      minutes: Number(shorthandMatch[1]) || 0,
+      focus: '',
+      notes: ''
+    };
+  }
+
+  return {
+    title: line,
+    minutes: 0,
+    focus: '',
+    notes: ''
+  };
+}
+
+function extractMinutes(value) {
+  const match = String(value || '').match(/(\d+(?:\.\d+)?)/);
+  return match ? Number(match[1]) || 0 : 0;
+}
+
+function formatTrainingBreakdown(drills) {
+  return (Array.isArray(drills) ? drills : [])
+    .map(drill => {
+      const parts = [
+        String(Number(drill.minutes) || 0),
+        String(drill.title || '').trim(),
+        String(drill.focus || '').trim(),
+        String(drill.notes || '').trim()
+      ];
+
+      while (parts.length > 2 && !parts[parts.length - 1]) {
+        parts.pop();
+      }
+
+      return parts.join(' | ');
+    })
+    .join('\n');
 }
 
 async function acceptBooking(id, button) {
@@ -1037,7 +1057,6 @@ trainingPlanForm?.addEventListener('submit', async event => {
     target: trainingPlanBooking.value,
     title: document.getElementById('training-plan-title').value,
     player_overview: document.getElementById('training-plan-overview').value,
-    player_topics: document.getElementById('training-plan-topics').value,
     prep_notes: document.getElementById('training-plan-prep').value,
     coach_notes: document.getElementById('training-plan-coach-notes').value,
     drills: collectDrills()
@@ -1073,10 +1092,7 @@ trainingPlanForm?.addEventListener('submit', async event => {
   }
 });
 
-addDrillButton?.addEventListener('click', () => {
-  appendDrillRow();
-  updateTrainingPlanTotal();
-});
+trainingPlanBreakdown?.addEventListener('input', updateTrainingPlanTotal);
 
 resetTrainingPlanButton?.addEventListener('click', () => resetTrainingPlanForm());
 

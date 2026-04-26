@@ -86,7 +86,6 @@ async function loadPlanTarget(plan) {
 
 function buildPlanText(plan, target) {
   const drills = Array.isArray(plan.drills) ? plan.drills : [];
-  const topics = Array.isArray(plan.player_topics) ? plan.player_topics : [];
 
   return [
     `Training plan: ${plan.title}`,
@@ -94,11 +93,8 @@ function buildPlanText(plan, target) {
     `Attached to: ${target.label}`,
     `Total time: ${totalMinutes(drills)} min`,
     '',
-    'Player overview',
+    'Session objective',
     plan.player_overview || '-',
-    '',
-    'Player topics',
-    topics.length ? topics.map(topic => `- ${topic}`).join('\n') : '-',
     '',
     'Prep and equipment',
     plan.prep_notes || '-',
@@ -119,7 +115,6 @@ function buildPlanText(plan, target) {
 
 function buildPlanHtml(plan, target) {
   const drills = Array.isArray(plan.drills) ? plan.drills : [];
-  const topics = Array.isArray(plan.player_topics) ? plan.player_topics : [];
 
   return `
     <div style="font-family:Inter,Segoe UI,Arial,sans-serif;color:#111827;line-height:1.5;padding:24px;background:#f5f7fb;">
@@ -132,11 +127,10 @@ function buildPlanHtml(plan, target) {
           <tr><td style="padding:8px 0;color:#65758b;">Total time</td><td style="padding:8px 0;font-weight:700;">${escapeHtml(String(totalMinutes(drills)))} min</td></tr>
         </table>
 
-        ${sectionHtml('Player overview', `<p style="margin:0;">${escapeHtml(plan.player_overview || '-')}</p>`)}
-        ${sectionHtml('Player topics', topics.length ? `<ul style="margin:0;padding-left:18px;">${topics.map(topic => `<li>${escapeHtml(topic)}</li>`).join('')}</ul>` : '<p style="margin:0;">-</p>')}
+        ${sectionHtml('Session objective', `<p style="margin:0;">${escapeHtml(plan.player_overview || '-')}</p>`)}
         ${sectionHtml('Prep and equipment', `<p style="margin:0;white-space:pre-wrap;">${escapeHtml(plan.prep_notes || '-')}</p>`)}
         ${sectionHtml('Coach notes', `<p style="margin:0;white-space:pre-wrap;">${escapeHtml(plan.coach_notes || '-')}</p>`)}
-        ${sectionHtml('Drill plan', drills.length ? `
+        ${sectionHtml('Session breakdown', drills.length ? `
           <div style="display:grid;gap:12px;">
             ${drills.map((drill, index) => `
               <div style="border:1px solid #d8e0ea;border-radius:10px;padding:14px 16px;background:#fbfdff;">
