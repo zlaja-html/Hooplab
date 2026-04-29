@@ -8,15 +8,9 @@ const translations = {
     },
     nav: {
       menu: 'Menu',
-      programs: 'Programs',
-      tryouts: 'Tryouts',
-      tours: 'Tours',
-      workouts: 'Workouts',
-      groupSessions: 'Group Sessions',
-      team: 'Team',
-      story: 'Story',
-      contact: 'Contact',
-      staff: 'Staff',
+      pathway: 'Tryouts & Tours',
+      training: 'Training',
+      more: 'More',
       apply: 'Apply'
     },
     hero: {
@@ -24,7 +18,7 @@ const translations = {
       title: 'For players chasing the next level.',
       copy: 'HoopLab Agency is a basketball development and exposure agency in Germany, helping players access tryouts, tours, workouts, scouting, and real next-step opportunities across Europe.',
       start: 'Start application',
-      explore: 'Explore programs'
+      explore: 'Explore pathway'
     },
     metrics: {
       tryoutTitle: 'Tryout',
@@ -90,6 +84,42 @@ const translations = {
       item3: 'Session dates are posted individually, not as a weekly schedule',
       item4: 'Players book available monthly dates through the application form',
       cta: 'Book a group session'
+    },
+    pathway: {
+      eyebrow: 'Tryouts and Tours',
+      title: 'The exposure path starts with evaluation and earns the next step.',
+      body: 'HoopLab does not sell tours as a shortcut. Players get evaluated first, then strong performers can be positioned for real opportunities.',
+      card1Title: 'Tryouts',
+      card1Body: 'Three-day evaluation formats with coaching, competitive drills, controlled scrimmages, and direct feedback.',
+      card2Title: 'Tours',
+      card2Body: 'Tours are for players who prove they are ready. Selection is based on performance, role fit, and coachability.',
+      item1: 'Selection is based on consistency, decision-making, effort, and performance under pressure',
+      item2: 'Tryouts help HoopLab scout players for future tours and market positioning',
+      item3: 'Game film, feedback, and direct communication support the next opportunity',
+      cta: 'Apply for tryouts'
+    },
+    training: {
+      eyebrow: 'Training and Consultation',
+      title: 'Individual work, group reps, and direct guidance in one track.',
+      body: 'Players can train one-on-one, in small groups, or use consultation when they need direct feedback, planning, and a clearer development direction.',
+      card1Title: 'Individual workouts',
+      card1Body: 'Focused sessions for reads, footwork, finishing, shot creation, and film-based development priorities.',
+      card2Title: 'Group sessions',
+      card2Body: 'Competitive small-group sessions for players who want game-speed reps and direct coaching.',
+      card3Title: 'Consultations',
+      card3Body: 'Direct conversations around scouting feedback, planning, positioning, and what the right next move actually is.',
+      item1: 'Individual workouts and group sessions can be booked when slots are available',
+      item2: 'Consultation is for players who need clarity, structure, and honest feedback',
+      item3: 'Training is built around practical game transfer, not random volume',
+      cta: 'Book training or consultation'
+    },
+    more: {
+      eyebrow: 'More',
+      title: 'Open only what you need.',
+      serviceSummary: 'Where HoopLab works and who it is for',
+      teamSummary: 'Team',
+      storySummary: 'Success story',
+      faqSummary: 'FAQ'
     },
     service: {
       eyebrow: 'Germany and Europe',
@@ -204,13 +234,9 @@ const translations = {
       title: 'Our partners.'
     },
     footer: {
-      programs: 'Programs',
-      tryouts: 'Tryouts',
-      tours: 'Tours',
-      workouts: 'Workouts',
-      groupSessions: 'Group Sessions',
-      team: 'Team',
-      contact: 'Contact',
+      pathway: 'Tryouts & Tours',
+      training: 'Training',
+      more: 'More',
       apply: 'Apply',
       staffAppointments: 'Staff appointments',
       tagline: 'International Basketball Development and Exposure'
@@ -233,15 +259,9 @@ const translations = {
     },
     nav: {
       menu: 'Menü',
-      programs: 'Programme',
-      tryouts: 'Tryouts',
-      tours: 'Tours',
-      workouts: 'Workouts',
-      groupSessions: 'Gruppensessions',
-      team: 'Team',
-      story: 'Story',
-      contact: 'Kontakt',
-      staff: 'Staff',
+      pathway: 'Tryouts und Tours',
+      training: 'Training',
+      more: 'Mehr',
       apply: 'Bewerben'
     },
     hero: {
@@ -249,7 +269,7 @@ const translations = {
       title: 'Für Spieler, die das nächste Level jagen.',
       copy: 'HoopLab Agency ist eine Basketball-Entwicklungs- und Exposure-Agentur in Deutschland und hilft Spielern dabei, ueber Tryouts, Tours, Workouts, Scouting und echte Anschlusschancen den naechsten Schritt in Europa zu erreichen.',
       start: 'Bewerbung starten',
-      explore: 'Programme ansehen'
+      explore: 'Weg ansehen'
     },
     metrics: {
       tryoutTitle: 'Tryout',
@@ -315,6 +335,42 @@ const translations = {
       item3: 'Session-Termine werden einzeln veröffentlicht, nicht als Wochenplan',
       item4: 'Spieler buchen verfügbare Monatstermine über das Bewerbungsformular',
       cta: 'Gruppensession buchen'
+    },
+    pathway: {
+      eyebrow: 'Tryouts und Tours',
+      title: 'Der Exposure-Weg startet mit Evaluation und verdient den naechsten Schritt.',
+      body: 'HoopLab verkauft Tours nicht als Abkuerzung. Spieler werden zuerst evaluiert, und starke Performer koennen danach fuer echte Chancen positioniert werden.',
+      card1Title: 'Tryouts',
+      card1Body: 'Drei-Tage-Evaluationen mit Coaching, wettkampforientierten Drills, kontrollierten Scrimmages und direktem Feedback.',
+      card2Title: 'Tours',
+      card2Body: 'Tours sind fuer Spieler, die bewiesen haben, dass sie bereit sind. Die Auswahl basiert auf Leistung, Rollenfit und Coachability.',
+      item1: 'Die Auswahl basiert auf Konstanz, Entscheidungen, Einsatz und Leistung unter Druck',
+      item2: 'Tryouts helfen HoopLab dabei, Spieler fuer Tours und Positionierung zu scouten',
+      item3: 'Gamefilm, Feedback und direkte Kommunikation unterstuetzen die naechste Chance',
+      cta: 'Fuer Tryouts bewerben'
+    },
+    training: {
+      eyebrow: 'Training und Beratung',
+      title: 'Individual Work, Gruppenreps und direkte Guidance in einem Track.',
+      body: 'Spieler koennen eins zu eins trainieren, in kleinen Gruppen arbeiten oder Beratung nutzen, wenn sie direktes Feedback, Planung und eine klarere Entwicklungsrichtung brauchen.',
+      card1Title: 'Individual Workouts',
+      card1Body: 'Fokussierte Sessions fuer Reads, Footwork, Finishing, Shot Creation und filmgestuetzte Entwicklungsprioritaeten.',
+      card2Title: 'Gruppensessions',
+      card2Body: 'Wettkampforientierte Small-Group-Sessions fuer Spieler, die Reps im Spieltempo und direktes Coaching wollen.',
+      card3Title: 'Beratungen',
+      card3Body: 'Direkte Gespraeche ueber Scouting-Feedback, Planung, Positionierung und den wirklich richtigen naechsten Schritt.',
+      item1: 'Individual Workouts und Gruppensessions koennen gebucht werden, wenn Slots offen sind',
+      item2: 'Beratung ist fuer Spieler, die Klarheit, Struktur und ehrliches Feedback brauchen',
+      item3: 'Training wird auf praktischen Spieltransfer gebaut, nicht auf zufaelliges Volumen',
+      cta: 'Training oder Beratung buchen'
+    },
+    more: {
+      eyebrow: 'Mehr',
+      title: 'Oeffne nur, was du wirklich brauchst.',
+      serviceSummary: 'Wo HoopLab arbeitet und fuer wen es gedacht ist',
+      teamSummary: 'Team',
+      storySummary: 'Erfolgsgeschichte',
+      faqSummary: 'FAQ'
     },
     service: {
       eyebrow: 'Deutschland und Europa',
@@ -429,13 +485,9 @@ const translations = {
       title: 'Unsere Partner.'
     },
     footer: {
-      programs: 'Programme',
-      tryouts: 'Tryouts',
-      tours: 'Tours',
-      workouts: 'Workouts',
-      groupSessions: 'Gruppensessions',
-      team: 'Team',
-      contact: 'Kontakt',
+      pathway: 'Tryouts und Tours',
+      training: 'Training',
+      more: 'Mehr',
       apply: 'Bewerben',
       staffAppointments: 'Staff-Termine',
       tagline: 'Internationale Basketball-Entwicklung und Sichtbarkeit'

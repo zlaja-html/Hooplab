@@ -469,6 +469,50 @@ h3 {
   font-weight: 900;
 }
 
+.main-topic {
+  border-top: 1px solid rgba(216, 224, 234, 0.8);
+  background: var(--paper);
+}
+
+.training-topic {
+  background:
+    linear-gradient(135deg, rgba(21, 94, 239, 0.06), rgba(8, 145, 178, 0.08)),
+    #fff;
+}
+
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 28px;
+}
+
+.topic-grid-three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.topic-card {
+  display: grid;
+  gap: 14px;
+  padding: 22px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 252, 0.98));
+  box-shadow: var(--shadow-soft);
+}
+
+.topic-card span {
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.topic-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
 .faq-card {
   display: grid;
   gap: 10px;
@@ -496,6 +540,63 @@ h3 {
 
 .faq-section {
   border-top: 1px solid rgba(216, 224, 234, 0.8);
+}
+
+.more-section {
+  border-top: 1px solid rgba(216, 224, 234, 0.8);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 252, 0.96));
+}
+
+.accordion-list {
+  display: grid;
+  gap: 14px;
+}
+
+.accordion-item {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.accordion-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 22px;
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--ink);
+}
+
+.accordion-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-item[open] summary {
+  border-bottom: 1px solid rgba(216, 224, 234, 0.9);
+}
+
+.accordion-body {
+  display: grid;
+  gap: 18px;
+  padding: 20px 22px 24px;
+}
+
+.accordion-body > p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.7;
+}
+
+.compact-team-grid .person-card img {
+  height: 280px;
+}
+
+.story-accordion {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: center;
 }
 
 .tryout-band,
@@ -1196,8 +1297,14 @@ textarea {
   .program-grid,
   .team-grid,
   .faq-grid,
+  .topic-grid,
+  .topic-grid-three,
   .staff-layout {
     grid-template-columns: 1fr 1fr;
+  }
+
+  .story-accordion {
+    grid-template-columns: 1fr;
   }
 
   .apply-copy {
@@ -1277,6 +1384,8 @@ textarea {
   .program-grid,
   .team-grid,
   .faq-grid,
+  .topic-grid,
+  .topic-grid-three,
   .staff-layout,
   .form-row,
   .form-row:last-of-type {
