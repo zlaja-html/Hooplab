@@ -409,9 +409,14 @@ h3 {
 }
 
 .program-grid,
-.team-grid {
+.team-grid,
+.faq-grid {
   display: grid;
   gap: 16px;
+}
+
+.faq-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .program-grid {
@@ -419,6 +424,7 @@ h3 {
 }
 
 .program-card,
+.faq-card,
 .person-card,
 .apply-form {
   border: 1px solid var(--line);
@@ -461,6 +467,35 @@ h3 {
   margin-top: auto;
   color: var(--blue);
   font-weight: 900;
+}
+
+.faq-card {
+  display: grid;
+  gap: 10px;
+  padding: 22px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(245, 248, 252, 0.98));
+}
+
+.faq-card p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.service-section {
+  background:
+    linear-gradient(135deg, rgba(21, 94, 239, 0.05), rgba(8, 145, 178, 0.06)),
+    #fff;
+  border-top: 1px solid rgba(216, 224, 234, 0.8);
+}
+
+.service-grid {
+  align-content: start;
+}
+
+.faq-section {
+  border-top: 1px solid rgba(216, 224, 234, 0.8);
 }
 
 .tryout-band,
@@ -1160,6 +1195,7 @@ textarea {
 
   .program-grid,
   .team-grid,
+  .faq-grid,
   .staff-layout {
     grid-template-columns: 1fr 1fr;
   }
@@ -1240,6 +1276,7 @@ textarea {
   .metrics,
   .program-grid,
   .team-grid,
+  .faq-grid,
   .staff-layout,
   .form-row,
   .form-row:last-of-type {

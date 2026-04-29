@@ -1,7 +1,7 @@
 const translations = {
   en: {
     metaTitle: 'HoopLab Agency | International Basketball Pathways',
-    metaDescription: 'HoopLab Agency builds international basketball pathways through tryouts, tours, workouts, scouting, and player development.',
+    metaDescription: 'HoopLab Agency offers basketball tryouts, individual workouts, group sessions, scouting, and player development in Germany for players chasing opportunities across Europe.',
     brand: {
       homeAria: 'HoopLab Agency home',
       tag: 'Agency'
@@ -90,6 +90,31 @@ const translations = {
       item3: 'Session dates are posted individually, not as a weekly schedule',
       item4: 'Players book available monthly dates through the application form',
       cta: 'Book a group session'
+    },
+    service: {
+      eyebrow: 'Germany and Europe',
+      title: 'Basketball tryouts and player development in Germany for serious players.',
+      body: 'HoopLab Agency operates from Boeblingen, Germany and works with players who need real basketball development, direct evaluation, and a pathway into stronger competition across Europe.',
+      item1: 'Basketball tryouts in Germany with real evaluation standards',
+      item2: 'Individual basketball workouts focused on reads, finishing, footwork, and shot creation',
+      item3: 'Small-group development sessions for players who want competitive reps',
+      item4: 'Scouting, feedback, and long-term player development instead of one-off sessions',
+      card1Title: 'For players in Germany',
+      card1Body: 'If you are based in Germany, HoopLab gives you access to workouts, group sessions, tryouts, and direct coaching built around your current level and next step.',
+      card2Title: 'For players targeting Europe',
+      card2Body: 'If you are trying to break into the European basketball market, HoopLab uses evaluation, communication, and exposure to help position you for the right opportunities.'
+    },
+    faq: {
+      eyebrow: 'Questions players ask',
+      title: 'Answers that help players choose the right next step.',
+      q1: 'Where is HoopLab Agency based?',
+      a1: 'HoopLab Agency is based in Boeblingen, Germany and works with players who want basketball development, scouting, tryouts, and exposure opportunities across Europe.',
+      q2: 'How do HoopLab basketball tryouts work?',
+      a2: 'Tryouts are evaluation-based. Coaches look at consistency, decision-making, coachability, effort, and performance under pressure rather than empty drills alone.',
+      q3: 'Can I book individual basketball workouts in Germany?',
+      a3: 'Yes. When workout slots are open, players can book through the site and train in sessions built around film review, development gaps, and practical game transfer.',
+      q4: 'Who are the group sessions for?',
+      a4: 'Group sessions are for players who want competitive reps, direct coaching, and a small-group basketball training environment instead of generic open-gym runs.'
     },
     team: {
       eyebrow: 'Team',
@@ -201,7 +226,7 @@ const translations = {
   },
   de: {
     metaTitle: 'HoopLab Agency | Internationale Basketball-Wege',
-    metaDescription: 'HoopLab Agency entwickelt internationale Basketball-Wege durch Tryouts, Tours, Workouts, Scouting und Spielerentwicklung.',
+    metaDescription: 'HoopLab Agency bietet Tryouts, Individual Workouts, Gruppensessions, Scouting und Spielerentwicklung in Deutschland fuer Spieler, die Chancen in Europa verfolgen.',
     brand: {
       homeAria: 'Startseite von HoopLab Agency',
       tag: 'Agency'
@@ -290,6 +315,31 @@ const translations = {
       item3: 'Session-Termine werden einzeln veröffentlicht, nicht als Wochenplan',
       item4: 'Spieler buchen verfügbare Monatstermine über das Bewerbungsformular',
       cta: 'Gruppensession buchen'
+    },
+    service: {
+      eyebrow: 'Deutschland und Europa',
+      title: 'Basketball-Tryouts und Spielerentwicklung in Deutschland fuer ambitionierte Spieler.',
+      body: 'HoopLab Agency arbeitet von Boeblingen aus und unterstuetzt Spieler, die echte Entwicklung, direkte Evaluation und einen Weg in staerkere Wettbewerbe in Europa suchen.',
+      item1: 'Basketball-Tryouts in Deutschland mit echten Evaluationsstandards',
+      item2: 'Individual Workouts mit Fokus auf Reads, Finishing, Footwork und Shot Creation',
+      item3: 'Small-Group-Entwicklungssessions fuer Spieler, die wettkampforientierte Reps wollen',
+      item4: 'Scouting, Feedback und langfristige Spielerentwicklung statt einmaliger Sessions',
+      card1Title: 'Fuer Spieler in Deutschland',
+      card1Body: 'Wenn du in Deutschland bist, gibt dir HoopLab Zugang zu Workouts, Gruppensessions, Tryouts und direktem Coaching rund um dein aktuelles Level und den naechsten Schritt.',
+      card2Title: 'Fuer Spieler mit Europa-Ziel',
+      card2Body: 'Wenn du in den europaeischen Basketballmarkt kommen willst, nutzt HoopLab Evaluation, Kommunikation und Exposure, um dich fuer die richtigen Chancen zu positionieren.'
+    },
+    faq: {
+      eyebrow: 'Haeufige Fragen',
+      title: 'Antworten, die Spielern bei der richtigen naechsten Entscheidung helfen.',
+      q1: 'Wo ist HoopLab Agency ansaessig?',
+      a1: 'HoopLab Agency hat seinen Standort in Boeblingen, Deutschland, und arbeitet mit Spielern, die Entwicklung, Scouting, Tryouts und Exposure-Chancen in Europa suchen.',
+      q2: 'Wie laufen HoopLab-Basketball-Tryouts ab?',
+      a2: 'Tryouts sind evaluationsbasiert. Coaches achten auf Konstanz, Entscheidungen, Coachability, Einsatz und Leistung unter Druck statt nur auf leere Drills.',
+      q3: 'Kann ich in Deutschland Individual Workouts buchen?',
+      a3: 'Ja. Wenn Workout-Slots offen sind, koennen Spieler ueber die Website buchen und in Sessions trainieren, die auf Filmanalyse, Entwicklungsfelder und echten Spieltransfer aufgebaut sind.',
+      q4: 'Fuer wen sind die Gruppensessions gedacht?',
+      a4: 'Gruppensessions sind fuer Spieler gedacht, die wettkampforientierte Reps, direktes Coaching und ein Small-Group-Basketballtraining statt generischer Open-Gym-Runs wollen.'
     },
     team: {
       eyebrow: 'Team',
