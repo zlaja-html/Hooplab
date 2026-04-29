@@ -515,6 +515,13 @@ translations.en.consultation = {
   item4: 'Built for honesty, structure, and a practical next action',
   cta: 'Book consultation'
 };
+translations.en.pathway.title = 'Tryouts are the evaluation step. Tours are the next opportunity for the right players.';
+translations.en.pathway.body = 'HoopLab does not offer tours as a shortcut. Players are evaluated first, then the strongest fits can move forward into real exposure opportunities.';
+translations.en.pathway.card1Body = 'Three-day evaluation events with coaching, competitive drills, controlled scrimmages, and direct feedback built around how a player actually performs.';
+translations.en.pathway.card2Body = 'Tours are reserved for players who prove they are ready. Selection is based on performance, role fit, attitude, and coachability in real team environments.';
+translations.en.pathway.item2 = 'Tryouts help HoopLab identify who is actually ready for future tours and positioning';
+translations.en.pathway.item3 = 'Game film, feedback, and direct communication are used to support the next opportunity';
+translations.en.more.title = 'Want to know more?';
 
 translations.de.training.title = 'Waehle das Format, das gerade wirklich zu deinem Bedarf passt.';
 translations.de.training.body = 'Manche Spieler brauchen direkte Entwicklungsarbeit, manche wettkampforientierte Gruppenreps und manche erst klares Feedback vor dem naechsten Schritt. HoopLab bietet jedes davon getrennt an.';
@@ -528,6 +535,13 @@ translations.de.consultation = {
   item4: 'Gebaut fuer Ehrlichkeit, Struktur und eine praktische naechste Aktion',
   cta: 'Beratung buchen'
 };
+translations.de.pathway.title = 'Tryouts sind der Evaluationsschritt. Tours sind die naechste Chance fuer die richtigen Spieler.';
+translations.de.pathway.body = 'HoopLab bietet Tours nicht als Abkuerzung an. Spieler werden zuerst evaluiert, und nur die staerksten Fits koennen in echte Exposure-Chancen weitergehen.';
+translations.de.pathway.card1Body = 'Drei-Tage-Evaluationen mit Coaching, wettkampforientierten Drills, kontrollierten Scrimmages und direktem Feedback rund um die echte Leistung eines Spielers.';
+translations.de.pathway.card2Body = 'Tours sind fuer Spieler reserviert, die bewiesen haben, dass sie bereit sind. Die Auswahl basiert auf Leistung, Rollenfit, Haltung und Coachability in echten Team-Umfeldern.';
+translations.de.pathway.item2 = 'Tryouts helfen HoopLab dabei zu erkennen, wer wirklich fuer zukuenftige Tours und Positionierung bereit ist';
+translations.de.pathway.item3 = 'Gamefilm, Feedback und direkte Kommunikation werden genutzt, um die naechste Chance zu unterstuetzen';
+translations.de.more.title = 'Willst du mehr wissen?';
 
 const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#site-nav');
