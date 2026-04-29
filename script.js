@@ -503,6 +503,32 @@ const translations = {
   }
 };
 
+translations.en.training.title = 'Choose the format that fits what you need right now.';
+translations.en.training.body = 'Some players need direct development work, some need competitive group reps, and some need clear feedback before making the next move. HoopLab offers each one separately.';
+translations.en.consultation = {
+  eyebrow: 'Consultation',
+  title: 'Get honest feedback before making the next move.',
+  body: 'Consultation is for players who need clarity, not hype. Use it to understand your current level, what actually needs work, and which next step makes sense.',
+  item1: 'Direct conversations around scouting feedback and current level',
+  item2: 'Planning around training, exposure, positioning, and timing',
+  item3: 'Useful for players deciding between workouts, tryouts, or a broader reset',
+  item4: 'Built for honesty, structure, and a practical next action',
+  cta: 'Book consultation'
+};
+
+translations.de.training.title = 'Waehle das Format, das gerade wirklich zu deinem Bedarf passt.';
+translations.de.training.body = 'Manche Spieler brauchen direkte Entwicklungsarbeit, manche wettkampforientierte Gruppenreps und manche erst klares Feedback vor dem naechsten Schritt. HoopLab bietet jedes davon getrennt an.';
+translations.de.consultation = {
+  eyebrow: 'Beratung',
+  title: 'Hol dir ehrliches Feedback vor dem naechsten Schritt.',
+  body: 'Beratung ist fuer Spieler, die Klarheit statt Hype brauchen. Sie hilft dir zu verstehen, wo du gerade stehst, was wirklich verbessert werden muss und welcher naechste Schritt Sinn ergibt.',
+  item1: 'Direkte Gespraeche ueber Scouting-Feedback und dein aktuelles Level',
+  item2: 'Planung rund um Training, Exposure, Positionierung und Timing',
+  item3: 'Sinnvoll fuer Spieler, die zwischen Workouts, Tryouts oder einem groesseren Reset entscheiden muessen',
+  item4: 'Gebaut fuer Ehrlichkeit, Struktur und eine praktische naechste Aktion',
+  cta: 'Beratung buchen'
+};
+
 const menuButton = document.querySelector('.menu-toggle');
 const nav = document.querySelector('#site-nav');
 const langButtons = document.querySelectorAll('[data-language]');

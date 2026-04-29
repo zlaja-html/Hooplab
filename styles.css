@@ -645,6 +645,46 @@ h3 {
   object-position: center 34%;
 }
 
+.training-stack {
+  display: grid;
+  gap: 26px;
+}
+
+.training-heading {
+  max-width: 760px;
+  margin-bottom: 8px;
+}
+
+.training-heading h2 {
+  max-width: 12ch;
+}
+
+.training-block {
+  padding: clamp(26px, 4vw, 42px);
+  border: 1px solid rgba(216, 224, 234, 0.9);
+  border-radius: 28px;
+  box-shadow: var(--shadow-soft);
+}
+
+.training-block h3 {
+  font-size: clamp(30px, 3.2vw, 44px);
+  line-height: 1;
+}
+
+.training-block .feature-copy {
+  max-width: 640px;
+}
+
+.training-block .feature-media img {
+  height: min(62svh, 540px);
+}
+
+.consultation-block {
+  background:
+    linear-gradient(135deg, rgba(22, 115, 95, 0.07), rgba(215, 154, 39, 0.1)),
+    #fff;
+}
+
 .check-list {
   display: grid;
   gap: 12px;
