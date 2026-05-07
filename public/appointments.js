@@ -1,0 +1,2 @@
+window.HOOPLAB_WORKOUT_SLOTS = [];
+window.HOOPLAB_GROUP_SESSION_SLOTS = [];

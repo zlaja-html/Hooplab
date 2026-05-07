@@ -3,3 +3,7 @@
 *.env
 supabasepassword.env
 node_modules/
+
+.vercel
+.env*.local
+dist/
