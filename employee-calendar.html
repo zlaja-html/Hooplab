@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="HoopLab shared staff calendar for appointments, blockers, and recurring events.">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>HoopLab Shared Calendar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html#home" aria-label="HoopLab Agency home">
+      <img class="brand-logo" src="images/Hooplablogo-sponzor.svg" alt="">
+      <span class="brand-copy">
+        <strong>HoopLab</strong>
+        <span>Calendar</span>
+      </span>
+    </a>
+
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      Menu
+    </button>
+
+    <nav class="site-nav" id="site-nav" aria-label="Staff navigation">
+      <a href="employee-appointments.html">Staff dashboard</a>
+      <a class="nav-cta" href="index.html#apply">Public booking</a>
+    </nav>
+  </header>
+
+  <main class="staff-page">
+    <section class="section staff-login" id="calendar-login">
+      <div class="section-copy">
+        <p class="eyebrow">Shared calendar</p>
+        <h1>Plan staff time in one place.</h1>
+        <p>
+          View Harun and Zlatan together, add blockers for trips, and manage repeating events across week, month, and 6-month views.
+        </p>
+      </div>
+
+      <form class="apply-form" id="calendar-login-form">
+        <label>
+          Staff member
+          <select name="staff_user" id="calendar-staff-user" required>
+            <option value="harun">Harun</option>
+            <option value="zlatan">Zlatan</option>
+          </select>
+        </label>
+        <label>
+          Staff code
+          <input type="password" name="staff_code" autocomplete="current-password" required>
+        </label>
+        <button class="button primary full" type="submit">Open calendar</button>
+        <p class="form-hint" id="calendar-login-hint" role="status">
+          Use your own staff login to access the shared calendar.
+        </p>
+      </form>
+    </section>
+
+    <section class="section calendar-shell" id="calendar-shell" hidden>
+      <div class="calendar-head">
+        <div>
+          <p class="eyebrow">Shared staff calendar</p>
+          <h2 id="calendar-range-label">May 2026</h2>
+          <p class="section-note">Shared appointments, public workout slots, and blockers live together here.</p>
+        </div>
+        <div class="calendar-toolbar">
+          <div class="view-switch" role="tablist" aria-label="Calendar views">
+            <button class="is-active" type="button" data-calendar-view="week">Week</button>
+            <button type="button" data-calendar-view="month">Month</button>
+            <button type="button" data-calendar-view="halfyear">6 Months</button>
+          </div>
+          <div class="calendar-nav">
+            <button class="button secondary light" type="button" id="calendar-today">Today</button>
+            <button class="button secondary light" type="button" id="calendar-prev" aria-label="Previous range">‹</button>
+            <button class="button secondary light" type="button" id="calendar-next" aria-label="Next range">›</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="calendar-layout">
+        <section class="calendar-panel">
+          <div class="calendar-legend" id="calendar-legend"></div>
+          <div id="calendar-view-host"></div>
+        </section>
+
+        <aside class="calendar-sidebar">
+          <section class="staff-panel">
+            <div class="calendar-sidebar-head">
+              <div>
+                <h3>Add blocker or appointment</h3>
+                <p class="section-note">Supports daily, weekly, biweekly, monthly, and yearly repeats.</p>
+              </div>
+              <button class="button secondary light" type="button" id="calendar-reset-form">New event</button>
+            </div>
+
+            <form class="apply-form calendar-event-form" id="calendar-event-form">
+              <input type="hidden" name="id" id="calendar-event-id">
+              <div class="form-row">
+                <label>
+                  Type
+                  <select name="event_type" id="calendar-event-type">
+                    <option value="blocker">Blocker</option>
+                    <option value="shared-appointment">Shared appointment</option>
+                    <option value="trip">Trip</option>
+                  </select>
+                </label>
+                <label>
+                  Owner
+                  <select name="staff_owner" id="calendar-event-owner">
+                    <option value="harun">Harun</option>
+                    <option value="zlatan">Zlatan</option>
+                    <option value="shared">Shared</option>
+                  </select>
+                </label>
+              </div>
+              <label>
+                Title
+                <input type="text" name="title" id="calendar-event-title" placeholder="Berlin trip / Team meeting / Gym blocked" required>
+              </label>
+              <div class="form-row">
+                <label>
+                  Start date
+                  <input type="date" name="start_date" id="calendar-event-start-date" required>
+                </label>
+                <label>
+                  End date
+                  <input type="date" name="end_date" id="calendar-event-end-date" required>
+                </label>
+              </div>
+              <div class="form-row">
+                <label>
+                  Start time
+                  <input type="time" name="start_time" id="calendar-event-start-time">
+                </label>
+                <label>
+                  End time
+                  <input type="time" name="end_time" id="calendar-event-end-time">
+                </label>
+              </div>
+              <label class="checkbox-row">
+                <input type="checkbox" name="all_day" id="calendar-event-all-day" checked>
+                <span>All day</span>
+              </label>
+              <div class="form-row">
+                <label>
+                  Repeat
+                  <select name="recurrence_frequency" id="calendar-event-repeat">
+                    <option value="none">Does not repeat</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="biweekly">Every 2 weeks</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </label>
+                <label>
+                  Repeat until
+                  <input type="date" name="recurrence_until" id="calendar-event-repeat-until">
+                </label>
+              </div>
+              <label>
+                Location
+                <input type="text" name="location" id="calendar-event-location" placeholder="Gym / Airport / Team office">
+              </label>
+              <label>
+                Notes
+                <textarea name="notes" id="calendar-event-notes" rows="4" placeholder="Optional notes for staff"></textarea>
+              </label>
+              <div class="booking-actions">
+                <button class="button primary" type="submit">Save event</button>
+                <button class="button danger" type="button" id="calendar-delete-event" hidden>Delete event</button>
+              </div>
+              <p class="form-hint" id="calendar-event-hint" role="status"></p>
+            </form>
+          </section>
+
+          <section class="staff-panel">
+            <h3>Upcoming items</h3>
+            <div class="appointment-list compact" id="calendar-upcoming-list"></div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="employee-calendar.js"></script>
+</body>
+</html>

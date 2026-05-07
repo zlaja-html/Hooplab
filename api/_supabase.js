@@ -2,6 +2,7 @@ const BOOKINGS_TABLE = process.env.SUPABASE_BOOKINGS_TABLE || 'hooplab_bookings'
 const AVAILABILITY_TABLE = process.env.SUPABASE_AVAILABILITY_TABLE || 'hooplab_availability';
 const TRAINING_PLANS_TABLE = process.env.SUPABASE_TRAINING_PLANS_TABLE || 'hooplab_training_plans';
 const STAFF_MEDIA_TABLE = process.env.SUPABASE_STAFF_MEDIA_TABLE || 'hooplab_staff_media';
+const CALENDAR_EVENTS_TABLE = process.env.SUPABASE_CALENDAR_EVENTS_TABLE || 'hooplab_calendar_events';
 
 export function hasSupabaseConfig() {
   return Boolean(process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
@@ -43,6 +44,7 @@ export async function listBookings() {
     'email',
     'phone',
     'status',
+    'staff_owner',
     'accepted_at',
     'refused_at',
     'created_at'
@@ -71,6 +73,7 @@ export async function getBooking(id) {
     'email',
     'phone',
     'status',
+    'staff_owner',
     'accepted_at',
     'refused_at',
     'created_at'
@@ -106,6 +109,12 @@ export async function listBookingCounts() {
 }
 
 export async function acceptBooking(id) {
+  const booking = await getBooking(id);
+
+  if (!booking) {
+    return null;
+  }
+
   const response = await supabaseFetch(BOOKINGS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
     method: 'PATCH',
     headers: {
@@ -113,6 +122,7 @@ export async function acceptBooking(id) {
     },
     body: JSON.stringify({
       status: 'accepted',
+      staff_owner: booking.staff_owner || inferStaffOwnerFromBooking(booking),
       accepted_at: new Date().toISOString()
     })
   });
@@ -173,6 +183,7 @@ export async function listAvailability({ activeOnly = false } = {}) {
     'appointment_time',
     'label',
     'note',
+    'staff_owner',
     'capacity',
     'active',
     'created_at'
@@ -200,6 +211,7 @@ export async function getAvailability(id) {
     'appointment_time',
     'label',
     'note',
+    'staff_owner',
     'capacity',
     'active',
     'created_at'
@@ -438,6 +450,94 @@ export async function updateStaffMedia(id, updates) {
   return rows[0] || null;
 }
 
+export async function listCalendarEvents() {
+  const fields = [
+    'id',
+    'title',
+    'event_type',
+    'staff_owner',
+    'color',
+    'start_date',
+    'end_date',
+    'start_time',
+    'end_time',
+    'all_day',
+    'location',
+    'notes',
+    'recurrence',
+    'active',
+    'created_at',
+    'updated_at'
+  ].join(',');
+  const response = await supabaseFetch(
+    CALENDAR_EVENTS_TABLE,
+    `?select=${fields}&active=eq.true&order=start_date.asc&order=start_time.asc.nullslast`
+  );
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase calendar-events list failed: ${response.status} ${details}`);
+  }
+
+  return response.json();
+}
+
+export async function createCalendarEvent(event) {
+  const response = await supabaseFetch(CALENDAR_EVENTS_TABLE, '', {
+    method: 'POST',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify(event)
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase calendar-event insert failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0];
+}
+
+export async function updateCalendarEvent(id, updates) {
+  const response = await supabaseFetch(CALENDAR_EVENTS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'PATCH',
+    headers: {
+      Prefer: 'return=representation'
+    },
+    body: JSON.stringify({
+      ...updates,
+      updated_at: new Date().toISOString()
+    })
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase calendar-event update failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
+export async function deleteCalendarEvent(id) {
+  const response = await supabaseFetch(CALENDAR_EVENTS_TABLE, `?id=eq.${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    headers: {
+      Prefer: 'return=representation'
+    }
+  });
+
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`Supabase calendar-event delete failed: ${response.status} ${details}`);
+  }
+
+  const rows = await response.json();
+  return rows[0] || null;
+}
+
 async function supabaseFetch(table, query = '', options = {}) {
   if (!hasSupabaseConfig()) {
     throw new Error('Supabase is not configured');
@@ -454,4 +554,14 @@ async function supabaseFetch(table, query = '', options = {}) {
       ...(options.headers || {})
     }
   });
+}
+
+function inferStaffOwnerFromBooking(booking) {
+  const label = `${booking.position || ''} ${booking.experience || ''}`.toLowerCase();
+
+  if (label.includes('zlatan')) {
+    return 'zlatan';
+  }
+
+  return 'harun';
 }

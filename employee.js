@@ -20,16 +20,27 @@ const flyerList = document.getElementById('flyer-list');
 const flyerHint = document.getElementById('flyer-hint');
 const uploadFlyerButton = document.getElementById('upload-flyer');
 const flyerUploadInput = document.getElementById('flyer-upload-input');
+const staffUserSelect = document.getElementById('staff-user');
+const availabilityOwnerSelect = document.getElementById('availability-owner');
+const activeStaffName = document.getElementById('active-staff-name');
 let currentBookings = [];
 let currentAvailability = [];
 let currentTrainingPlans = [];
 let currentFlyers = [];
+let currentStaffUser = null;
+let currentStaffUsers = [];
 
 async function showDashboard() {
   staffLogin.hidden = true;
   staffDashboard.hidden = false;
   staffHint.textContent = '';
   staffHint.className = 'form-hint';
+  if (activeStaffName) {
+    activeStaffName.textContent = currentStaffUser?.name || 'Staff';
+  }
+  if (availabilityOwnerSelect && currentStaffUser?.id) {
+    availabilityOwnerSelect.value = currentStaffUser.id;
+  }
   await Promise.all([loadAvailability(), loadBookings(), loadTrainingPlans(), loadFlyers()]);
 }
 
@@ -107,6 +118,7 @@ async function lockDashboard() {
 
   staffLogin.hidden = false;
   staffDashboard.hidden = true;
+  currentStaffUser = null;
 }
 
 async function loadFlyers() {
@@ -358,7 +370,10 @@ function renderAvailability(availability) {
     const card = document.createElement('article');
     card.className = 'appointment-card';
     card.innerHTML = `
-      <strong>${escapeHtml(slot.appointment || '')}</strong>
+      <div class="appointment-card-head">
+        <strong>${escapeHtml(slot.appointment || '')}</strong>
+        <span class="owner-pill owner-${escapeHtml(slot.staff_owner || 'shared')}">${escapeHtml(ownerLabel(slot.staff_owner))}</span>
+      </div>
       <span>${escapeHtml(labelProgram(slot.program))} - Capacity ${escapeHtml(slot.capacity || 1)} - ${slot.active ? 'Active' : 'Hidden'}</span>
       <span>${escapeHtml(slot.label || '')}${slot.note ? ` - ${escapeHtml(slot.note)}` : ''}</span>
       ${plan ? renderPlanSnippet(plan) : ''}
@@ -956,6 +971,18 @@ function labelProgram(program) {
   return 'Appointment';
 }
 
+function ownerLabel(owner) {
+  if (owner === 'harun') {
+    return 'Harun';
+  }
+
+  if (owner === 'zlatan') {
+    return 'Zlatan';
+  }
+
+  return 'Shared';
+}
+
 function formatAppointment(booking) {
   if (booking.program === 'tryouts') {
     return 'Tryout request';
@@ -999,7 +1026,10 @@ staffForm?.addEventListener('submit', async event => {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ staff_code: data.get('staff_code') })
+      body: JSON.stringify({
+        staff_user: data.get('staff_user'),
+        staff_code: data.get('staff_code')
+      })
     });
     const result = await response.json().catch(() => ({}));
 
@@ -1009,12 +1039,58 @@ staffForm?.addEventListener('submit', async event => {
       return;
     }
 
+    currentStaffUser = result.staffUser || null;
     await showDashboard();
   } catch {
     staffHint.className = 'form-hint error';
     staffHint.textContent = 'Could not check staff access.';
   }
 });
+
+async function bootstrapStaffSession() {
+  try {
+    const response = await fetch('/api/staff-session', { credentials: 'include' });
+    const result = await response.json().catch(() => ({}));
+    currentStaffUsers = result.staffUsers || [];
+    applyStaffOptions();
+
+    if (!response.ok) {
+      return;
+    }
+
+    currentStaffUser = result.staffUser || null;
+    resetTrainingPlanForm();
+    await showDashboard();
+  } catch {
+    applyStaffOptions();
+  }
+}
+
+function applyStaffOptions() {
+  if (!currentStaffUsers.length) {
+    return;
+  }
+
+  const options = currentStaffUsers
+    .map(user => `<option value="${escapeHtml(user.id)}">${escapeHtml(user.name)}</option>`)
+    .join('');
+
+  if (staffUserSelect) {
+    const currentValue = staffUserSelect.value;
+    staffUserSelect.innerHTML = options;
+    if ([...staffUserSelect.options].some(option => option.value === currentValue)) {
+      staffUserSelect.value = currentValue;
+    }
+  }
+
+  if (availabilityOwnerSelect) {
+    const currentValue = availabilityOwnerSelect.value;
+    availabilityOwnerSelect.innerHTML = `${options}<option value="shared">Shared</option>`;
+    availabilityOwnerSelect.value = [...availabilityOwnerSelect.options].some(option => option.value === currentValue)
+      ? currentValue
+      : (currentStaffUser?.id || availabilityOwnerSelect.options[0]?.value || 'shared');
+  }
+}
 
 availabilityForm?.addEventListener('submit', async event => {
   event.preventDefault();
@@ -1104,13 +1180,4 @@ deleteTrainingPlanButton?.addEventListener('click', () => {
 
 logoutButton?.addEventListener('click', lockDashboard);
 
-fetch('/api/bookings', { credentials: 'include' })
-  .then(response => {
-    if (response.ok) {
-      resetTrainingPlanForm();
-      return showDashboard();
-    }
-
-    return null;
-  })
-  .catch(() => {});
+bootstrapStaffSession();

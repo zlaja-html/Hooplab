@@ -47,6 +47,7 @@ export default async function handler(req, res) {
         appointment_time: body.appointment_time,
         label: body.label,
         note: body.note || null,
+        staff_owner: body.staff_owner || null,
         capacity,
         active: body.active !== false
       });
@@ -67,6 +68,10 @@ export default async function handler(req, res) {
 
       if (body.capacity) {
         updates.capacity = Math.max(1, Number(body.capacity) || 1);
+      }
+
+      if (body.staff_owner) {
+        updates.staff_owner = body.staff_owner;
       }
 
       const slot = await updateAvailability(body.id, updates);

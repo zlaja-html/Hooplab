@@ -1,4 +1,4 @@
-import { createStaffSessionCookie, isValidStaffCode } from './_auth.js';
+import { createStaffSessionCookie, getStaffUserFromCredentials, listStaffUsers } from './_auth.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,16 +7,18 @@ export default async function handler(req, res) {
 
   const body = typeof req.body === 'string' ? safeParse(req.body) : req.body || {};
 
-  if (!process.env.STAFF_ACCESS_CODE) {
+  const staffUser = getStaffUserFromCredentials(body.staff_user, body.staff_code);
+
+  if (!staffUser && !process.env.STAFF_ACCESS_CODE && !listStaffUsers().length) {
     return res.status(500).json({ error: 'Staff access is not configured.' });
   }
 
-  if (!isValidStaffCode(body.staff_code)) {
+  if (!staffUser) {
     return res.status(401).json({ error: 'Incorrect staff code.' });
   }
 
-  res.setHeader('Set-Cookie', createStaffSessionCookie());
-  return res.status(200).json({ ok: true });
+  res.setHeader('Set-Cookie', createStaffSessionCookie(staffUser));
+  return res.status(200).json({ ok: true, staffUser });
 }
 
 function safeParse(str) {
