@@ -92,7 +92,7 @@ export function ApplicationForm() {
         return;
       }
 
-      setStatus({ type: 'success', message: 'Application received. HoopLab will review and respond after evaluation.' });
+      setStatus({ type: 'success', message: 'Application received. HoopLab will review and respond soon.' });
       setForm(emptyForm());
     } catch {
       setStatus({ type: 'error', message: 'Could not send your application right now.' });
@@ -114,7 +114,7 @@ export function ApplicationForm() {
             <span className="text-xs font-semibold uppercase tracking-[0.18em]">Application form</span>
           </div>
           <p className="text-sm leading-6 text-[var(--brand-muted)]">
-            Serious players only. Choose the right track, add your details, and lock an open slot if you need a workout or group session.
+            Choose the right program, add your details, and select an open slot if you need a workout or group session.
           </p>
         </div>
 
@@ -189,7 +189,7 @@ export function ApplicationForm() {
 
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <p className={`text-sm ${status.type === 'error' ? 'text-red-300' : 'text-[var(--brand-muted)]'}`}>
-              {status.message || 'Applications are reviewed manually by the HoopLab staff.'}
+              {status.message || 'Every application is reviewed manually by the HoopLab team.'}
             </p>
             <Button size="lg" type="submit" disabled={submitting || (appointmentPrograms.has(form.program) && !form.appointment)}>
               <Send className="mr-2 h-4 w-4" />

@@ -6,7 +6,7 @@ export const Input = React.forwardRef(function Input({ className, ...props }, re
     <input
       ref={ref}
       className={cn(
-        'h-12 w-full rounded-2xl border border-white/10 bg-[var(--brand-slate-soft)] px-4 text-sm text-[var(--brand-paper)] outline-none transition placeholder:text-[var(--brand-muted)] focus:border-[var(--brand-accent)]/70 focus:ring-2 focus:ring-[var(--brand-accent)]/20',
+        'h-12 w-full rounded-2xl border border-white/12 bg-[rgba(255,255,255,0.06)] px-4 text-sm text-[var(--brand-paper)] outline-none transition placeholder:text-[var(--brand-muted)] focus:border-[var(--brand-accent)]/70 focus:ring-2 focus:ring-[var(--brand-accent)]/20',
         className
       )}
       {...props}

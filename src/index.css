@@ -4,14 +4,14 @@
   --brand-primary: #313b50;
   --brand-primary-rgb: 49 59 80;
   --brand-accent: #52b9d0;
-  --brand-accent-soft: #70cadf;
-  --brand-night: #0b0f17;
-  --brand-night-soft: #11161f;
-  --brand-slate-deep: #1b2230;
-  --brand-slate-soft: #232d3f;
+  --brand-accent-soft: #86d2e4;
+  --brand-night: #1a2230;
+  --brand-night-soft: #20293a;
+  --brand-slate-deep: #293548;
+  --brand-slate-soft: #34445c;
   --brand-paper: #f4f8fc;
-  --brand-muted: #93a5bd;
-  --brand-line: rgba(82, 185, 208, 0.14);
+  --brand-muted: #b7c4d4;
+  --brand-line: rgba(82, 185, 208, 0.2);
   --brand-ink: #0f1822;
 }
 
@@ -32,8 +32,8 @@ body {
   margin: 0;
   font-family: var(--font-sans);
   background:
-    radial-gradient(circle at top, rgba(82, 185, 208, 0.08), transparent 28%),
-    linear-gradient(180deg, #0b0f17 0%, #101621 52%, #0b0f17 100%);
+    radial-gradient(circle at top, rgba(82, 185, 208, 0.14), transparent 32%),
+    linear-gradient(180deg, #253143 0%, #202938 48%, #19222f 100%);
   color: var(--brand-paper);
 }
 
