@@ -324,7 +324,7 @@ function PathwaySection() {
         <Reveal delay={0.12}>
           <Card className="overflow-hidden">
             <div className="relative">
-              <img src="/images/Harun Coaching (3).jpeg" alt="HoopLab session" className="h-full min-h-[520px] w-full object-cover" />
+              <img src="/images/Harun Coaching (1).jpeg" alt="HoopLab tryout session" className="h-full min-h-[520px] w-full object-cover" />
               <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(244,248,252,0.02),rgba(22,29,42,0.82))]" />
               <div className="absolute inset-x-0 bottom-0 p-8">
                 <motion.div
