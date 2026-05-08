@@ -24,6 +24,7 @@ const OWNER_META = {
   shared: { label: 'Shared', color: '#0f766e' },
   booking: { label: 'Player booking', color: '#d97706' }
 };
+const WEEK_HOURS = Array.from({ length: 13 }, (_, index) => 8 + index);
 
 const state = {
   view: 'week',
@@ -248,35 +249,71 @@ function renderWeekView(weekStart, occurrences) {
   const dayStarts = [...Array(7)].map((_, index) => addDays(startOfWeek(weekStart), index));
   const weekItems = occurrences.filter(item => item.end >= dayStarts[0] && item.start < addDays(dayStarts[6], 1));
 
-  const grid = document.createElement('section');
-  grid.className = 'calendar-week-grid';
+  const scheduler = document.createElement('section');
+  scheduler.className = 'calendar-week-scheduler';
+  scheduler.innerHTML = '<div class="calendar-week-corner">Time</div>';
 
   dayStarts.forEach(dayStart => {
     const dayItems = weekItems
       .filter(item => intersectsDay(item, dayStart))
       .sort((a, b) => sortOccurrence(a, b));
-    const column = document.createElement('article');
-    column.className = 'calendar-day-column';
-    column.innerHTML = `
-      <header>
-        <span>${formatWeekday(dayStart)}</span>
-        <strong>${dayStart.getDate()}</strong>
-      </header>
-      <div class="calendar-day-items"></div>
+    const allDayItems = dayItems.filter(item => item.all_day);
+    const header = document.createElement('button');
+    header.type = 'button';
+    header.className = 'calendar-day-header-button';
+    header.dataset.prefillDay = toDateInputValue(dayStart);
+    header.innerHTML = `
+      <span>${formatWeekday(dayStart)}</span>
+      <strong>${dayStart.getDate()}</strong>
+      <small>${allDayItems.length ? `${allDayItems.length} all-day` : 'Add all-day'}</small>
     `;
-
-    const itemsHost = column.querySelector('.calendar-day-items');
-
-    if (!dayItems.length) {
-      itemsHost.innerHTML = '<p class="calendar-empty-state">No items</p>';
-    } else {
-      dayItems.forEach(item => itemsHost.append(renderOccurrenceCard(item)));
-    }
-
-    grid.append(column);
+    scheduler.append(header);
   });
 
-  viewHost.replaceChildren(grid);
+  WEEK_HOURS.forEach(hour => {
+    const label = document.createElement('div');
+    label.className = 'calendar-time-label';
+    label.textContent = `${String(hour).padStart(2, '0')}:00`;
+    scheduler.append(label);
+
+    dayStarts.forEach(dayStart => {
+      const slotDate = toDateInputValue(dayStart);
+      const hourItems = weekItems
+        .filter(item => !item.all_day)
+        .filter(item => item.start >= dayStart && item.start < addDays(dayStart, 1))
+        .filter(item => item.start.getHours() === hour)
+        .sort((a, b) => sortOccurrence(a, b));
+      const slot = document.createElement('button');
+      slot.type = 'button';
+      slot.className = 'calendar-time-slot';
+      slot.dataset.prefillDate = slotDate;
+      slot.dataset.prefillTime = `${String(hour).padStart(2, '0')}:00`;
+      slot.innerHTML = '<div class="calendar-time-slot-events"></div>';
+
+      const itemsHost = slot.querySelector('.calendar-time-slot-events');
+
+      if (!hourItems.length) {
+        const hint = document.createElement('span');
+        hint.className = 'calendar-slot-add';
+        hint.textContent = '+';
+        itemsHost.append(hint);
+      } else {
+        hourItems.slice(0, 3).forEach(item => itemsHost.append(renderOccurrenceBadge(item)));
+
+        if (hourItems.length > 3) {
+          const more = document.createElement('span');
+          more.className = 'calendar-slot-more';
+          more.textContent = `+${hourItems.length - 3} more`;
+          itemsHost.append(more);
+        }
+      }
+
+      scheduler.append(slot);
+    });
+  });
+
+  viewHost.replaceChildren(scheduler);
+  bindCalendarPrefillControls();
 }
 
 function renderMonthView(anchor, occurrences) {
@@ -293,6 +330,7 @@ function renderMonthView(anchor, occurrences) {
       .slice(0, 4);
     const cell = document.createElement('article');
     cell.className = `calendar-month-cell${dayStart.getMonth() === monthStart.getMonth() ? '' : ' is-outside'}`;
+    cell.dataset.prefillDay = toDateInputValue(dayStart);
     cell.innerHTML = `
       <header>
         <span>${formatWeekdayShort(dayStart)}</span>
@@ -312,6 +350,7 @@ function renderMonthView(anchor, occurrences) {
   }
 
   viewHost.replaceChildren(grid);
+  bindCalendarPrefillControls();
 }
 
 function renderHalfYearView(anchor, occurrences) {
@@ -342,6 +381,7 @@ function renderHalfYearView(anchor, occurrences) {
         const dot = document.createElement('button');
         dot.type = 'button';
         dot.className = `calendar-mini-day${dayStart.getMonth() === monthStart.getMonth() ? '' : ' is-outside'}`;
+        dot.dataset.prefillDay = toDateInputValue(dayStart);
         dot.innerHTML = `<span>${dayStart.getDate()}</span>`;
 
         if (items[0]) {
@@ -360,6 +400,7 @@ function renderHalfYearView(anchor, occurrences) {
   }
 
   viewHost.replaceChildren(wrap);
+  bindCalendarPrefillControls();
 }
 
 function renderOccurrenceCard(item, compact = false) {
@@ -795,4 +836,160 @@ function escapeHtml(value) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function bindCalendarPrefillControls() {
+  viewHost.querySelectorAll('[data-prefill-day]').forEach(element => {
+    element.addEventListener('click', event => {
+      if (event.target.closest('.calendar-badge')) {
+        return;
+      }
+
+      prefillEventForm({
+        date: element.dataset.prefillDay,
+        allDay: true
+      });
+    });
+  });
+
+  viewHost.querySelectorAll('[data-prefill-date][data-prefill-time]').forEach(element => {
+    element.addEventListener('click', event => {
+      if (event.target.closest('.calendar-badge')) {
+        return;
+      }
+
+      prefillEventForm({
+        date: element.dataset.prefillDate,
+        startTime: element.dataset.prefillTime,
+        endTime: addHourToTime(element.dataset.prefillTime),
+        allDay: false
+      });
+    });
+  });
+}
+
+function prefillEventForm({ date, startTime = '', endTime = '', allDay = true }) {
+  eventIdInput.value = '';
+  deleteEventButton.hidden = true;
+  document.getElementById('calendar-event-type').value = 'blocker';
+  document.getElementById('calendar-event-title').value = '';
+  document.getElementById('calendar-event-start-date').value = date;
+  document.getElementById('calendar-event-end-date').value = date;
+  document.getElementById('calendar-event-all-day').checked = allDay;
+  document.getElementById('calendar-event-start-time').value = allDay ? '' : startTime;
+  document.getElementById('calendar-event-end-time').value = allDay ? '' : endTime;
+  document.getElementById('calendar-event-repeat').value = 'none';
+  document.getElementById('calendar-event-repeat-until').value = '';
+  eventHint.className = 'form-hint';
+  eventHint.textContent = allDay
+    ? `Drafting an all-day event for ${date}.`
+    : `Drafting an event on ${date} at ${startTime}.`;
+  updateTimeFieldsState();
+  eventForm?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('calendar-event-title')?.focus();
+}
+
+function addHourToTime(timeValue) {
+  const [hours, minutes] = String(timeValue || '00:00').split(':').map(Number);
+  const endHour = Math.min(23, (Number.isFinite(hours) ? hours : 0) + 1);
+  return `${String(endHour).padStart(2, '0')}:${String(Number.isFinite(minutes) ? minutes : 0).padStart(2, '0')}`;
+}
+
+function renderOccurrenceCard(item, compact = false) {
+  const card = document.createElement('article');
+  card.className = `calendar-entry-card${compact ? ' compact' : ''}`;
+  card.style.setProperty('--event-accent', resolveEventColor(item));
+  card.innerHTML = `
+    <button class="calendar-entry-card-button" type="button">
+      <span class="calendar-entry-meta">${escapeHtml(ownerLabel(item.staff_owner))} | ${escapeHtml(eventTypeLabel(item.event_type))}</span>
+      <strong>${escapeHtml(item.title)}</strong>
+      <span>${escapeHtml(formatOccurrenceTime(item))}</span>
+      ${item.notes ? `<span>${escapeHtml(item.notes)}</span>` : ''}
+    </button>
+  `;
+
+  card.querySelector('button').addEventListener('click', () => {
+    if (item.source === 'calendar-event') {
+      populateEventForm(item.raw);
+    }
+  });
+
+  return card;
+}
+
+function renderOccurrenceBadge(item) {
+  const badge = document.createElement('button');
+  badge.type = 'button';
+  badge.className = 'calendar-badge';
+  badge.style.setProperty('--event-accent', resolveEventColor(item));
+  badge.textContent = `${formatOccurrenceTime(item, true)} ${item.title}`;
+  badge.title = item.title;
+  badge.addEventListener('click', () => {
+    if (item.source === 'calendar-event') {
+      populateEventForm(item.raw);
+    }
+  });
+  return badge;
+}
+
+function mapAvailabilityOccurrences(rangeStart, rangeEnd) {
+  return state.availability
+    .map(slot => {
+      const start = parseDateTime(slot.appointment_date, slot.appointment_time);
+      const end = new Date(start.getTime() + (60 * 60 * 1000));
+
+      if (!slot.active || end < rangeStart || start >= rangeEnd) {
+        return null;
+      }
+
+      return buildOccurrence({
+        source: 'availability',
+        raw: slot,
+        id: slot.id,
+        title: slot.label || labelProgram(slot.program),
+        event_type: 'shared-appointment',
+        staff_owner: slot.staff_owner || 'shared',
+        notes: `${labelProgram(slot.program)} | Capacity ${slot.capacity || 1}${slot.note ? ` | ${slot.note}` : ''}`,
+        start,
+        end,
+        all_day: false
+      });
+    })
+    .filter(Boolean);
+}
+
+function mapBookingOccurrences(rangeStart, rangeEnd) {
+  return state.bookings
+    .filter(booking => booking.status !== 'refused')
+    .map(booking => {
+      const start = parseDateTime(booking.appointment_date, booking.appointment_time);
+      const end = new Date(start.getTime() + (60 * 60 * 1000));
+
+      if (!booking.appointment_date || end < rangeStart || start >= rangeEnd) {
+        return null;
+      }
+
+      return buildOccurrence({
+        source: 'booking',
+        raw: booking,
+        id: booking.id,
+        title: `${booking.name} | ${labelProgram(booking.program)}`,
+        event_type: 'booking',
+        staff_owner: booking.staff_owner || 'booking',
+        notes: booking.status === 'accepted' ? 'Accepted booking' : 'Pending booking',
+        start,
+        end,
+        all_day: false
+      });
+    })
+    .filter(Boolean);
+}
+
+function formatOccurrenceTime(item, short = false) {
+  if (item.all_day) {
+    return short ? 'All day' : `${formatDate(item.start)} | All day`;
+  }
+
+  const time = `${formatTime(item.start)}-${formatTime(item.end)}`;
+  return short ? time : `${formatDate(item.start)} | ${time}`;
 }
