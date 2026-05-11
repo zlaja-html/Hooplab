@@ -1,7 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Disallow: /employee-appointments.html
-Disallow: /employee-calendar.html
 
 Sitemap: https://hooplab-agency.com/sitemap.xml
