@@ -1,5 +1,5 @@
 import React from 'react';
-import { ArrowRight, ChevronDown, Globe2, ShieldCheck, Trophy, Users } from 'lucide-react';
+import { ArrowRight, ChevronDown, Globe2, Users } from 'lucide-react';
 import { motion } from 'motion/react';
 import { ApplicationForm } from '@/components/application-form';
 import { Reveal } from '@/components/reveal';
@@ -8,47 +8,52 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 
-const services = [
+const offers = [
   {
     title: 'Tryouts',
-    body: 'Three-day evaluation events with coaching, competitive drills, and direct feedback built around how a player actually performs.',
+    body: 'Three-day evaluation events with coaching, competitive drills, and direct feedback.',
     number: '01'
   },
   {
     title: 'Individual Workouts',
-    body: 'Individual workouts include scouting review, tailored development plans, and regular consultation built around each player.',
+    body: 'Personal workouts with scouting review, tailored development plans, and regular consultation.',
     number: '02'
   },
   {
     title: 'Group Sessions',
-    body: 'Monthly small-group development sessions for players who want competitive reps and direct coaching.',
+    body: 'Small-group sessions for competitive reps, direct coaching, and accountability.',
     number: '03'
   }
 ];
 
-const pathwaySteps = [
-  'Tryouts are the evaluation step for players who want real next-level opportunities.',
-  'Selected players can move forward into tours, development work, and exposure opportunities.',
-  'Training, feedback, and direct communication help support the next move.'
+const aboutPoints = [
+  'Germany-based basketball agency',
+  'Player development, exposure, and scouting',
+  'Work with players entering or growing in the European market'
 ];
 
-const successStories = [
+const testimonials = [
   {
-    name: 'Xavier Boyd',
-    line: 'After arriving in Germany, Xavier used the Boeblingen Panthers platform to adapt, earn minutes, and eventually secure a move to Kirchheim.',
-    image: '/images/Xavier Boyd.jpeg'
+    name: 'Amoni Clarke',
+    image: '/images/amoniclarke-testimonial.jpeg',
+    text: 'Amoni Clark joined Germany during the second half of the season through HoopLab Agency, where we supported his first steps into the German basketball market. After building initial exposure and creating the right connections, he was able to establish himself with MTV Stuttgart in Regionalliga 1. There, he gained valuable playing time, adapted to the European style of basketball, and built strong in-game highlights against high-level competition on an important step in his professional journey.'
   },
   {
-    name: 'Player Pathways',
-    line: 'HoopLab combines consistent performance, targeted exposure, and active communication in the German basketball market.',
-    image: '/images/Xavier in-Game.jpeg'
+    name: 'Garrick Averett',
+    image: '/images/garrickaverett-testimonial.jpeg',
+    text: 'Garrick Averett’s first opportunity to enter the European basketball market was created through HoopLab Agency. We helped establish the initial connection and supported his move to the SV Böblingen Panthers, where he took his first steps in Germany competing in the Landesliga. During his time there, Garrick was able to gain valuable playing time, build strong game highlights, and establish himself within a new basketball environment on an important foundation in his professional journey.'
+  },
+  {
+    name: 'Xavier Boyd',
+    image: '/images/xavier-testimonial.jpeg',
+    text: 'After arriving in Germany, Xavier used the Böblingen Panthers platform to adapt, earn minutes, and build momentum for his next move. HoopLab supported the process with development, exposure, and direct market communication.'
   }
 ];
 
-const aboutBullets = [
-  'HoopLab Agency operates from Boeblingen, Germany and works with players who need real basketball development and direct evaluation.',
-  'The agency combines coaching, scouting, training, and exposure opportunities across Europe.',
-  'Players can access tryouts, workouts, group sessions, consultation, and a clear next-step pathway.'
+const pathwaySteps = [
+  'Tryouts are the first evaluation step for players who want real next-level opportunities.',
+  'Selected players can move forward into tours, development work, and exposure opportunities.',
+  'Training, feedback, and direct communication help support the next move.'
 ];
 
 export default function App() {
@@ -58,8 +63,8 @@ export default function App() {
       <main>
         <HeroSection />
         <AboutSection />
-        <SuccessSection />
-        <ServicesSection />
+        <TestimonialsSection />
+        <OffersSection />
         <PathwaySection />
         <ApplicationSection />
       </main>
@@ -70,22 +75,23 @@ export default function App() {
 
 function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/6 bg-[rgba(11,15,23,0.82)] backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 md:px-8">
-        <a href="#top" className="flex items-center gap-4">
-          <img src="/images/Hooplablogo-sponzor.svg" alt="HoopLab" className="h-12 w-12 rounded-xl bg-white/4 p-1.5" />
-          <div className="leading-none">
-            <strong className="font-display text-2xl uppercase tracking-[0.12em]">HoopLab</strong>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.28em] text-[var(--brand-accent)]">Agency</p>
+    <header className="absolute inset-x-0 top-0 z-50">
+      <div className="mx-auto max-w-7xl px-5 pt-5 md:px-8 md:pt-7">
+        <div className="flex items-center justify-center rounded-full border border-white/10 bg-[rgba(12,22,34,0.82)] px-6 py-4 shadow-[0_20px_60px_rgba(0,0,0,0.28)] backdrop-blur-md md:px-8">
+          <div className="hidden flex-1 items-center justify-end gap-8 pr-10 text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand-paper)]/82 md:flex">
+            <a href="#top" className="text-[var(--brand-accent)] transition hover:text-white">Home</a>
+            <a href="#about" className="transition hover:text-white">About</a>
+            <a href="#testimonials" className="transition hover:text-white">Testimonials</a>
           </div>
-        </a>
-        <nav className="hidden items-center gap-8 text-sm font-medium text-[var(--brand-muted)] md:flex">
-          <a href="#about" className="transition hover:text-white">About</a>
-          <a href="#success" className="transition hover:text-white">Success</a>
-          <a href="#services" className="transition hover:text-white">Services</a>
-          <a href="#pathway" className="transition hover:text-white">Pathway</a>
-          <Button asChild variant="secondary"><a href="#apply">Apply</a></Button>
-        </nav>
+          <a href="#top" className="flex items-center justify-center">
+            <img src="/images/Hooplablogo-sponzor.svg" alt="HoopLab" className="h-12 w-auto md:h-14" />
+          </a>
+          <nav className="hidden flex-1 items-center justify-start gap-8 pl-10 text-sm font-semibold uppercase tracking-[0.14em] text-[var(--brand-paper)]/82 md:flex">
+            <a href="#offers" className="transition hover:text-white">Offers</a>
+            <a href="#pathway" className="transition hover:text-white">Pathway</a>
+            <a href="#apply" className="transition hover:text-white">Apply</a>
+          </nav>
+        </div>
       </div>
     </header>
   );
@@ -95,25 +101,26 @@ function HeroSection() {
   return (
     <section id="top" className="relative overflow-hidden border-b border-white/6">
       <div className="absolute inset-0">
-        <img src="/images/Harun Coaching (9).jpeg" alt="HoopLab coach leading players" className="h-full w-full object-cover object-center opacity-30" />
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(82,185,208,0.22),transparent_38%),linear-gradient(180deg,rgba(32,41,58,0.28),rgba(17,24,36,0.82))]" />
+        <img src="/images/Harun Coaching (9).jpeg" alt="HoopLab coach leading players" className="h-full w-full object-cover object-center opacity-38" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,24,34,0.82),rgba(15,24,34,0.58)_28%,rgba(15,24,34,0.78)),radial-gradient(circle_at_center,rgba(82,185,208,0.08),transparent_44%)]" />
       </div>
-      <div className="relative mx-auto grid min-h-[calc(100vh-81px)] max-w-7xl items-end gap-12 px-5 py-18 md:grid-cols-[1.15fr_0.85fr] md:px-8 md:py-24">
-        <div className="space-y-8">
-          <Reveal>
-            <Badge>International basketball pathways</Badge>
+      <div className="relative mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-5 py-24 text-center md:px-8 md:py-32">
+        <div className="space-y-7">
+          <Reveal className="pt-24 md:pt-24">
+            <Badge>Basketball agency in Germany</Badge>
           </Reveal>
           <Reveal delay={0.08}>
-            <h1 className="max-w-4xl font-display text-6xl uppercase leading-[0.92] tracking-[0.02em] md:text-8xl">
-              For players chasing the next level.
+            <h1 className="mx-auto max-w-5xl font-display text-5xl uppercase leading-[0.88] tracking-[0.04em] text-white md:text-7xl xl:text-[6.6rem]">
+              This is HoopLab.
+              <span className="block">Development, exposure, opportunity.</span>
             </h1>
           </Reveal>
-          <Reveal delay={0.16}>
-            <p className="max-w-2xl text-lg leading-8 text-[var(--brand-muted)] md:text-xl">
-              HoopLab Agency is a basketball development and exposure agency in Germany, helping players access tryouts, tours, workouts, scouting, and real next-step opportunities across Europe.
+          <Reveal delay={0.14}>
+            <p className="mx-auto max-w-3xl text-base leading-8 text-[var(--brand-paper)]/82 md:text-[1.25rem]">
+              We help players build their next step through tryouts, training, scouting, and direct connections in the European basketball market.
             </p>
           </Reveal>
-          <Reveal delay={0.24} className="flex flex-col gap-4 sm:flex-row">
+          <Reveal delay={0.2} className="flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button asChild size="lg">
               <a href="#apply">
                 Start application
@@ -121,40 +128,15 @@ function HeroSection() {
               </a>
             </Button>
             <Button asChild variant="secondary" size="lg">
-              <a href="#pathway">Explore pathway</a>
+              <a href="#testimonials">View testimonials</a>
             </Button>
           </Reveal>
-          <Reveal delay={0.3} className="grid gap-4 pt-8 sm:grid-cols-3">
-            <HeroStat title="Tryout" body="Elite 3-day tryout designed to test your skills in real game situations." />
-            <HeroStat title="Perform" body="Top performers earn opportunities for teams, tours, and next-level exposure." />
-            <HeroStat title="Compete" body="Compete across Europe and showcase your talent in front of real teams." />
+          <Reveal delay={0.26} className="mx-auto grid max-w-5xl gap-4 pt-6 md:grid-cols-3">
+            <HeroStat title="Agency" body="Germany-based basketball development and exposure." />
+            <HeroStat title="Players" body="Built around individual growth and real market opportunities." />
+            <HeroStat title="Europe" body="Focused on helping players take the right next step." />
           </Reveal>
         </div>
-
-        <Reveal delay={0.22} className="justify-self-stretch md:justify-self-end">
-          <Card className="overflow-hidden">
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between border-b border-white/8 pb-5">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-[var(--brand-accent)]">HoopLab standard</p>
-                  <h2 className="mt-2 font-display text-3xl uppercase">Evaluation, development, exposure.</h2>
-                </div>
-                <ShieldCheck className="h-8 w-8 text-[var(--brand-accent)]" />
-              </div>
-              <ul className="space-y-4 text-sm leading-7 text-[var(--brand-muted)]">
-                <li>Tryouts are used to evaluate consistency, decision-making, effort, and performance under pressure.</li>
-                <li>Tours are the next opportunity for the right players after evaluation.</li>
-                <li>Training is built around practical development, scouting feedback, and clear next actions.</li>
-              </ul>
-              <div className="rounded-[24px] border border-[var(--brand-accent)]/20 bg-[var(--brand-accent)]/8 p-5">
-                <p className="text-xs uppercase tracking-[0.2em] text-[var(--brand-accent)]">Built for the next step</p>
-                <p className="mt-2 text-sm leading-7 text-[var(--brand-paper)]">
-                  HoopLab combines development, feedback, and exposure into one clear basketball pathway.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </Reveal>
       </div>
       <a href="#about" className="absolute bottom-6 left-1/2 hidden -translate-x-1/2 items-center gap-2 text-xs uppercase tracking-[0.18em] text-[var(--brand-muted)] md:flex">
         Scroll
@@ -166,9 +148,9 @@ function HeroSection() {
 
 function HeroStat({ title, body }) {
   return (
-    <div className="rounded-[24px] border border-white/8 bg-white/[0.03] p-5 backdrop-blur-sm">
-      <p className="font-display text-2xl uppercase text-[var(--brand-paper)]">{title}</p>
-      <p className="mt-2 text-sm leading-6 text-[var(--brand-muted)]">{body}</p>
+    <div className="rounded-[28px] border border-white/10 bg-[rgba(18,29,42,0.46)] p-6 backdrop-blur-sm">
+      <p className="font-display text-3xl uppercase tracking-[0.08em] text-[var(--brand-paper)]">{title}</p>
+      <p className="mt-3 text-sm leading-6 text-[var(--brand-paper)]/72">{body}</p>
     </div>
   );
 }
@@ -176,41 +158,30 @@ function HeroStat({ title, body }) {
 function AboutSection() {
   return (
     <section id="about" className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
-      <Reveal>
-        <SectionHeading
-          eyebrow="About / Mission"
-          title="Basketball development and exposure built around a clear pathway."
-          body="HoopLab Agency works with players in Germany and across Europe who need real basketball development, direct evaluation, and a practical next step."
-        />
-      </Reveal>
-      <div className="mt-14 grid gap-6 lg:grid-cols-[0.95fr_1.05fr]">
-        <Reveal delay={0.08}>
+      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <Reveal>
           <Card className="h-full">
-            <CardContent className="space-y-5">
+            <CardContent className="space-y-6">
               <div className="flex items-center gap-3 text-[var(--brand-accent)]">
                 <Globe2 className="h-5 w-5" />
-                <span className="text-xs uppercase tracking-[0.2em]">International focus</span>
+                <span className="text-xs uppercase tracking-[0.2em]">About us</span>
               </div>
-              <h3 className="font-display text-4xl uppercase leading-tight">Germany-based. Europe-focused.</h3>
-              <p className="text-base leading-7 text-[var(--brand-muted)]">
-                HoopLab offers individual workouts, group sessions, tryouts, consultation, and direct communication to help players find the right next opportunity.
+              <h2 className="font-display text-4xl uppercase leading-tight md:text-5xl">
+                A clean pathway into the European basketball market.
+              </h2>
+              <p className="max-w-2xl text-base leading-8 text-[var(--brand-muted)]">
+                HoopLab works with players who need development, exposure, and the right connections. The focus is simple: clear evaluation, practical support, and the next opportunity.
               </p>
-              <div className="grid gap-4 md:grid-cols-3">
-                <MetricBlock value="01" label="Tryouts" />
-                <MetricBlock value="02" label="Training" />
-                <MetricBlock value="03" label="Exposure" />
-              </div>
             </CardContent>
           </Card>
         </Reveal>
-
-        <div className="grid gap-6">
-          {aboutBullets.map((item, index) => (
-            <Reveal key={item} delay={0.12 + (index * 0.08)}>
+        <div className="grid gap-4">
+          {aboutPoints.map((point, index) => (
+            <Reveal key={point} delay={0.08 + (index * 0.08)}>
               <Card>
-                <CardContent className="flex items-start gap-5">
+                <CardContent className="flex items-center gap-5">
                   <span className="font-display text-4xl text-[var(--brand-accent)]">0{index + 1}</span>
-                  <p className="text-base leading-8 text-[var(--brand-muted)]">{item}</p>
+                  <p className="text-base leading-7 text-[var(--brand-muted)]">{point}</p>
                 </CardContent>
               </Card>
             </Reveal>
@@ -221,41 +192,27 @@ function AboutSection() {
   );
 }
 
-function MetricBlock({ value, label }) {
+function TestimonialsSection() {
   return (
-    <div className="rounded-[20px] border border-white/8 bg-[var(--brand-night-soft)] p-4">
-      <p className="font-display text-3xl text-[var(--brand-paper)]">{value}</p>
-      <p className="mt-2 text-xs uppercase tracking-[0.18em] text-[var(--brand-muted)]">{label}</p>
-    </div>
-  );
-}
-
-function SuccessSection() {
-  return (
-    <section id="success" className="border-y border-white/6 bg-[var(--brand-slate-deep)]/45">
+    <section id="testimonials" className="border-y border-white/6 bg-[var(--brand-slate-deep)]/45">
       <div className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
         <Reveal>
-        <SectionHeading
-          eyebrow="Success stories"
-          title="Player pathways that lead to the next move."
-          body="Development, consistent performance, and market communication work best when they support a clear opportunity."
-        />
+          <SectionHeading
+            eyebrow="Testimonials"
+            title="Players we have worked with."
+            body="A few examples of how HoopLab has helped players enter the market, build exposure, and move forward."
+          />
         </Reveal>
-        <div className="mt-14 grid gap-6 lg:grid-cols-2">
-          {successStories.map((story, index) => (
-            <Reveal key={story.name} delay={0.08 + (index * 0.1)}>
-              <Card className="overflow-hidden">
-                <div className="grid lg:grid-cols-[0.8fr_1.2fr]">
-                  <img src={story.image} alt={story.name} className="h-full min-h-[280px] w-full object-cover" />
-                  <CardContent className="flex flex-col justify-between gap-8">
-                    <div className="space-y-4">
-                      <Trophy className="h-5 w-5 text-[var(--brand-accent)]" />
-                      <h3 className="font-display text-3xl uppercase">{story.name}</h3>
-                      <p className="text-base leading-7 text-[var(--brand-muted)]">{story.line}</p>
-                    </div>
-                    <p className="text-sm uppercase tracking-[0.18em] text-[var(--brand-accent)]">Development, exposure, and progression</p>
-                  </CardContent>
-                </div>
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
+          {testimonials.map((item, index) => (
+            <Reveal key={item.name} delay={0.08 + (index * 0.08)}>
+              <Card className="h-full overflow-hidden">
+                <img src={item.image} alt={item.name} className="h-72 w-full object-cover object-top" />
+                <CardContent className="space-y-4">
+                  <p className="text-xs uppercase tracking-[0.22em] text-[var(--brand-accent)]">Client testimonial</p>
+                  <h3 className="font-display text-3xl uppercase">{item.name}</h3>
+                  <p className="text-base leading-7 text-[var(--brand-muted)]">{item.text}</p>
+                </CardContent>
               </Card>
             </Reveal>
           ))}
@@ -265,31 +222,31 @@ function SuccessSection() {
   );
 }
 
-function ServicesSection() {
+function OffersSection() {
   return (
-    <section id="services" className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
+    <section id="offers" className="mx-auto max-w-7xl px-5 py-20 md:px-8 md:py-28">
       <Reveal>
         <SectionHeading
-          eyebrow="Services"
-          title="Choose the best way to train for you."
-          body="Some players need direct development work, some need competitive group reps, and some need clear feedback before making the next move."
+          eyebrow="Offers"
+          title="What we offer."
+          body="The programs stay the same, but the structure is clearer: evaluation, training, and ongoing support."
         />
       </Reveal>
       <div className="mt-14 grid gap-6 lg:grid-cols-3">
-        {services.map((service, index) => (
-          <Reveal key={service.title} delay={0.08 + (index * 0.08)}>
+        {offers.map((offer, index) => (
+          <Reveal key={offer.title} delay={0.08 + (index * 0.08)}>
             <Card className="h-full">
               <CardContent className="flex h-full flex-col gap-10">
                 <div className="flex items-center justify-between">
-                  <span className="font-display text-5xl text-[var(--brand-accent)]">{service.number}</span>
+                  <span className="font-display text-5xl text-[var(--brand-accent)]">{offer.number}</span>
                   <Users className="h-5 w-5 text-[var(--brand-accent)]" />
                 </div>
                 <div className="space-y-4">
-                  <h3 className="font-display text-3xl uppercase">{service.title}</h3>
-                  <p className="text-base leading-7 text-[var(--brand-muted)]">{service.body}</p>
+                  <h3 className="font-display text-3xl uppercase">{offer.title}</h3>
+                  <p className="text-base leading-7 text-[var(--brand-muted)]">{offer.body}</p>
                 </div>
                 <div className="mt-auto border-t border-white/8 pt-5 text-xs uppercase tracking-[0.2em] text-[var(--brand-muted)]">
-                  Built around development and opportunity.
+                  Development, evaluation, and opportunity.
                 </div>
               </CardContent>
             </Card>
@@ -307,9 +264,9 @@ function PathwaySection() {
         <Reveal>
           <div className="space-y-8">
             <SectionHeading
-              eyebrow="Player pathway"
-              title="Tryouts are the evaluation step. Tours are the next opportunity."
-              body="HoopLab does not offer tours as a shortcut. Players are evaluated first, then the strongest fits can move forward into real opportunities."
+              eyebrow="Pathway"
+              title="Evaluation first. Opportunity next."
+              body="HoopLab does not position tours as a shortcut. Players are evaluated first, then the strongest fits move forward into real opportunities."
             />
             <div className="space-y-4">
               {pathwaySteps.map((step, index) => (
@@ -396,7 +353,8 @@ function SiteFooter() {
         <div className="grid gap-4 text-sm text-[var(--brand-muted)] sm:grid-cols-2">
           <div className="space-y-2">
             <p className="font-semibold uppercase tracking-[0.18em] text-[var(--brand-paper)]">Navigate</p>
-            <a className="block hover:text-white" href="#services">Services</a>
+            <a className="block hover:text-white" href="#testimonials">Testimonials</a>
+            <a className="block hover:text-white" href="#offers">Offers</a>
             <a className="block hover:text-white" href="#pathway">Pathway</a>
             <a className="block hover:text-white" href="#apply">Apply</a>
             <a className="block hover:text-white" href="/employee-appointments.html">Staff workspace</a>
